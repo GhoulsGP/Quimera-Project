@@ -1,10 +1,16 @@
 <?php
-// ARCHIVO: pie_quimera.php
+// ARCHIVO: pie_quimera.php (v1.5 - Corrección de Visibilidad)
 ?>
-        </main> </div> <script>
+        </main>
+    </div>
+
+    <audio id="audio-click" src="/sounds/click.mp3" preload="auto"></audio>
+    <audio id="audio-like" src="/sounds/like.mp3" preload="auto"></audio>
+
+    <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- SCRIPT GLOBAL PARA MENÚ Y TEMAS ---
         const body = document.body;
+        // --- LÓGICA GLOBAL DE LA PLANTILLA ---
         const navToggle = document.getElementById('nav-toggle'); 
         if(navToggle) {
             navToggle.addEventListener('click', (e) => {
@@ -18,22 +24,57 @@
             themeSwitcher.addEventListener('click', (e) => {
                 const target = e.target.closest('.theme-button');
                 if (target) {
-                    // Lógica robusta para cambiar clases de tema sin afectar a otras
                     body.classList.remove('theme-aurora', 'theme-dark', 'theme-light');
                     const theme = target.dataset.theme;
                     body.classList.add(theme);
-                    
                     themeSwitcher.querySelector('.active')?.classList.remove('active');
                     target.classList.add('active');
+                    if (theme === 'theme-aurora') setGenerativeTheme();
                 }
             });
         }
 
+        // --- LÓGICA DE PAISAJISMO SONORO ---
+        let soundsEnabled = false;
+        const audioClick = document.getElementById('audio-click');
+        const soundToggle = document.getElementById('sound-toggle');
+        const soundOnIcon = document.getElementById('sound-on-icon');
+        const soundOffIcon = document.getElementById('sound-off-icon');
+        function playSound(audioElement) {
+            if (soundsEnabled && audioElement) {
+                audioElement.currentTime = 0;
+                audioElement.play().catch(e => console.error("Error al reproducir sonido:", e));
+            }
+        }
+        if (soundToggle) {
+            soundToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                soundsEnabled = !soundsEnabled;
+                soundOnIcon.style.display = soundsEnabled ? 'block' : 'none';
+                soundOffIcon.style.display = soundsEnabled ? 'none' : 'block';
+                playSound(audioClick);
+            });
+        }
+
+        // --- LÓGICA DE TEMA GENERATIVO ---
+        function setGenerativeTheme() {
+            const hour = new Date().getHours();
+            let accentHue;
+            if (hour >= 5 && hour < 12) { accentHue = 190; }
+            else if (hour >= 12 && hour < 18) { accentHue = 260; }
+            else if (hour >= 18 && hour < 22) { accentHue = 30; }
+            else { accentHue = 220; }
+            document.documentElement.style.setProperty('--c-accent-h', accentHue);
+        }
+        if (body.classList.contains('theme-aurora')) {
+            setGenerativeTheme();
+        }
+
         // --- SCRIPTS ESPECÍFICOS DE LA PÁGINA DE INICIO ---
-        // Solo se ejecutan si estamos en una página con la clase '.home-layout'
         if(document.querySelector('.home-layout')) {
-            // Animaciones de entrada
+            // Lógica de Animación de Entrada Segura
             const animatedItems = document.querySelectorAll('.animated-item');
+            animatedItems.forEach(item => { item.classList.add('prepare-animation'); });
             if ('IntersectionObserver' in window) {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach((entry, index) => {
@@ -45,53 +86,20 @@
                 }, { threshold: 0.1 });
                 animatedItems.forEach(item => observer.observe(item));
             } else {
-                animatedItems.forEach(item => item.classList.add('is-visible'));
+                animatedItems.forEach(item => { item.classList.remove('prepare-animation'); });
             }
-
-            // Script para Cristal Líquido (Ripple)
-            const rippleCards = document.querySelectorAll('.post-card');
-            rippleCards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--ripple-x', x + 'px');
-                    card.style.setProperty('--ripple-y', y + 'px');
+            
+            // Lógica para Tarjeta de Crear Publicación
+            const createPostCard = document.getElementById('create-post-card');
+            if (createPostCard) {
+                const createPostTextarea = createPostCard.querySelector('.create-post-textarea');
+                createPostCard.addEventListener('click', () => {
+                    if (!createPostCard.classList.contains('expanded')) {
+                        createPostCard.classList.add('expanded');
+                        createPostTextarea.focus();
+                    }
                 });
-            });
-
-            // Script para Texto Cinético
-            const kineticTexts = document.querySelectorAll('.kinetic-text');
-            kineticTexts.forEach(text => {
-                // Evita que el script se ejecute dos veces en el mismo texto
-                if (text.classList.contains('kinetic-processed')) return;
-
-                const originalText = text.textContent;
-                const letters = originalText.split('').map(letter => {
-                    // Asigna valores aleatorios para la animación a cada letra
-                    const dx = (Math.random() - 0.5) * 20;
-                    const dy = (Math.random() - 0.5) * 20;
-                    const r = (Math.random() - 0.5) * 30;
-                    return `<span class="char" style="--dx:${dx}px; --dy:${dy}px; --r:${r}deg;">${letter}</span>`;
-                }).join('');
-                text.innerHTML = letters;
-                text.classList.add('kinetic-processed');
-            });
-
-            // Script para Aurora Interactiva
-            document.body.addEventListener('click', (e) => {
-                // Evita que la aurora reaccione si se hace clic en un botón o enlace
-                if (e.target.closest('a, button')) return;
-
-                const blobs = document.querySelectorAll('.aurora-blob');
-                blobs.forEach(blob => {
-                    blob.style.transition = 'transform 0.5s ease-out';
-                    const currentScale = blob.style.transform.match(/scale\(([^)]+)\)/);
-                    const scaleValue = currentScale ? parseFloat(currentScale[1]) : 1;
-                    blob.style.transform = `scale(${scaleValue * 1.2})`;
-                    setTimeout(() => { blob.style.transform = `scale(${scaleValue})`; }, 500);
-                });
-            });
+            }
         }
     });
     </script>

@@ -1,256 +1,159 @@
 <?php 
-    // ARCHIVO: inicio.php (Edición Sorpresa)
+    // ARCHIVO: inicio.php (v1.7 - Corrección Definitiva)
 
-    // 1. Incluimos la cabecera (nuestro marco)
     include 'plantilla_quimera.php';
     
-    // 2. Definimos los datos de prueba para esta página
-    $stories = [
-        ['avatar' => 'https://randomuser.me/api/portraits/women/65.jpg', 'nombre' => 'Ana'],
-        ['avatar' => 'https://randomuser.me/api/portraits/men/32.jpg', 'nombre' => 'Carlos'],
-        ['avatar' => 'https://randomuser.me/api/portraits/women/44.jpg', 'nombre' => 'Beatriz'],
-    ];
+    // Datos de prueba
     $posts = [
-        [
-            'autor_nombre' => 'Elena Codes', 'autor_avatar' => 'https://randomuser.me/api/portraits/women/26.jpg', 'tiempo' => 'Hace 5 min',
-            'contenido' => 'Jugando con los nuevos efectos de #QuimeraProject. La web se siente viva.',
-            'imagen' => 'https://images.unsplash.com/photo-1555949963-ff98c8726514?q=80&w=2070&auto=format&fit=crop',
-            'likes' => 124, 'comentarios' => 12,
-        ],
-        [
-            'autor_nombre' => 'Carlos Dev', 'autor_avatar' => 'https://randomuser.me/api/portraits/men/32.jpg', 'tiempo' => 'Hace 1 hora',
-            'contenido' => 'El efecto de texto cinético es una locura. #CSS #JavaScript',
-            'imagen' => null,
-            'likes' => 89, 'comentarios' => 23,
-        ],
+        [ 'autor_nombre' => 'Elena Codes', 'type' => 'wide', 'contenido' => 'Este post es ancho porque tiene una imagen destacada.', 'imagen' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop'],
+        [ 'autor_nombre' => 'Carlos Dev', 'type' => 'normal', 'contenido' => 'Un post de solo texto, más compacto.', 'imagen' => null],
+        [ 'autor_nombre' => 'Ana Design', 'type' => 'vertical', 'contenido' => 'Ahora los posts con imágenes verticales no son tan gigantes y quedan mucho mejor.', 'imagen' => 'https://images.unsplash.com/photo-1511300636412-01634217b4e6?q=80&w=1887&auto=format&fit=crop'],
     ];
     $tendencias = ['#QuimeraProject', '#NextGenUI', '#CreativeCoding', '#UXMagic', '#FutureWeb'];
 ?>
 
 <style>
+    /* Estilos específicos de la página de inicio */
     .home-layout {
         display: grid;
-        grid-template-columns: 1fr 320px;
+        grid-template-columns: repeat(2, 1fr) 320px;
         gap: 32px;
         align-items: flex-start;
     }
-    .main-feed, .sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-    }
-    .animated-item {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-    .animated-item.is-visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
 
-    /* --- INOVACIÓN 1: CRISTAL LÍQUIDO - EFECTO "RIPPLE" --- */
-    .post-card {
-        position: relative;
-        overflow: hidden;
+    /* Tarjeta para Crear Publicación */
+    #create-post-card {
+        grid-column: 1 / 3;
         background: var(--c-glass-bg);
         backdrop-filter: blur(var(--blur-light, 16px));
         border: 1px solid var(--c-glass-border);
         border-radius: var(--radius-lg);
         padding: 24px;
-    }
-    .post-card::before {
-        content: '';
-        position: absolute;
-        left: var(--ripple-x); 
-        top: var(--ripple-y);
-        width: 0;
-        height: 0;
-        background: radial-gradient(circle, hsla(0,0%,100%,0.2) 0%, transparent 80%);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        transition: width 0.7s, height 0.7s;
-        opacity: 0;
-    }
-    .post-card:hover::before {
-        width: 400px;
-        height: 400px;
-        opacity: 1;
-        transition: width 0.7s, height 0.7s, opacity 0.7s;
-    }
-
-    /* --- INOVACIÓN 2: ICONOS CON "LATIDO" --- */
-    .like-button:hover .heart-icon {
-        animation: heart-beat 0.8s ease-in-out infinite;
-    }
-    @keyframes heart-beat {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.2); }
-    }
-    .action-button {
-        background: none;
-        border: none;
-        color: var(--c-text-secondary);
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        transition: all 0.4s ease;
         cursor: pointer;
-        font-weight: 600;
     }
-    .post-actions { display: flex; gap: 24px; }
-    .post-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--c-glass-border); padding-top: 16px; margin-top: 16px;}
+    #create-post-card:hover { border-color: var(--c-glass-border-hover); }
+    #create-post-card.expanded { cursor: default; }
+    .create-post-compact { display: flex; align-items: center; gap: 16px; }
+    .create-post-avatar { width: 48px; height: 48px; border-radius: 50%; }
+    .create-post-placeholder { flex-grow: 1; color: var(--c-text-secondary); font-size: 1.1rem; font-weight: 500; }
+    .create-post-expanded-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out;
+    }
+    #create-post-card.expanded .create-post-expanded-content {
+        max-height: 300px;
+        margin-top: 24px;
+    }
+    .create-post-textarea {
+        width: 100%; min-height: 100px; background: rgba(0,0,0,0.1);
+        border: 1px solid transparent; border-radius: var(--radius-md);
+        padding: 16px; color: var(--c-text); font-size: 1.1rem;
+        resize: vertical; outline: none; transition: border-color var(--transition-fast);
+    }
+    .create-post-textarea:focus { border-color: var(--c-accent); }
+    .create-post-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+    .action-icons { display: flex; gap: 16px; }
+    .action-icons svg { stroke: var(--c-text-secondary); cursor: pointer; transition: stroke var(--transition-fast); }
+    .action-icons svg:hover { stroke: var(--c-accent); }
+    .quimera-button {
+        padding: 10px 24px; font-weight: 600; cursor: pointer;
+        border-radius: var(--radius-sm); border: none; background: var(--c-accent);
+        color: var(--c-accent-text); transition: transform 0.2s;
+    }
+    .quimera-button:hover { transform: scale(1.05); }
+
+    /* Estilos del resto de la página */
+    .animated-item {
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .animated-item.prepare-animation {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    .animated-item.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .post-card { grid-column: span 1; }
+    .post-card.post-wide { grid-column: span 2; }
+    .sidebar { grid-column: 3 / 4; grid-row: 1 / span 20; position: sticky; top: 16px; }
+    .post-card.post-vertical { display: flex; flex-direction: row; align-items: center; gap: 20px; }
+    .post-vertical .post-image-container { flex: 1 1 40%; height: 250px; }
+    .post-vertical .post-image { height: 100%; object-fit: cover; }
+    .post-vertical .post-body { flex: 1 1 60%; }
+    .trends-container { background: var(--c-glass-bg); backdrop-filter: blur(var(--blur-light, 16px)); border: 1px solid var(--c-glass-border); border-radius: var(--radius-lg); padding: 24px; }
+    .trends-container h3 { margin-bottom: 16px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; font-weight: 600;}
+    .trends-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+    .trends-list a { color: var(--c-text-secondary); text-decoration: none; font-weight: 500; transition: color var(--transition-fast); }
+    .trends-list a:hover { color: var(--c-accent); }
+    .post-card { transition: all 0.4s ease; background: var(--c-glass-bg); backdrop-filter: blur(var(--blur-light, 16px)); border: 1px solid var(--c-glass-border); border-radius: var(--radius-lg); padding: 24px; }
+    .post-image-container { border-radius: var(--radius-md); overflow: hidden; margin-top: 16px;}
+    .post-image { width: 100%; display: block; }
     .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
     .post-avatar { width: 48px; height: 48px; border-radius: 50%; }
-    .post-content { line-height: 1.6; }
-    .post-content a { color: var(--c-accent); text-decoration: none; font-weight: 600; }
-    .post-image { width: 100%; border-radius: var(--radius-md); margin-top: 16px; }
 
-
-    /* --- INOVACIÓN 3: TEXTO CINÉTICO - LETRAS QUE DANZAN --- */
-    .kinetic-text-container a { 
-        color: var(--c-text-secondary);
-        text-decoration: none;
-        font-weight: 600; 
-        display: inline-block;
-    }
-    .kinetic-text-container a:hover .char {
-        animation: kinetic-scramble 0.8s ease-out forwards;
-    }
-    .char {
-        display: inline-block;
-    }
-    @keyframes kinetic-scramble {
-        0% { transform: translate(0,0) rotate(0); opacity: 1; }
-        50% { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); opacity: 0.5; }
-        100% { transform: translate(0,0) rotate(0); opacity: 1; }
-    }
-
-    /* Estilos adicionales para stories y tendencias */
-    .stories-container, .trends-container {
-        background: var(--c-glass-bg); backdrop-filter: blur(var(--blur-light, 16px));
-        border: 1px solid var(--c-glass-border); border-radius: var(--radius-lg); padding: 16px;
-    }
-    .stories-scroll { display: flex; gap: 16px; overflow-x: auto; }
-    .stories-scroll::-webkit-scrollbar { display: none; }
-    .story-item { text-align: center; cursor: pointer; }
-    .story-avatar { width: 64px; height: 64px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, var(--c-accent), hsl(190, 80%, 60%)); }
-    .story-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--c-bg); }
-    
-    .trends-container h3 { margin-bottom: 16px; }
-    .trends-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-
-    @media (max-width: 1024px) {
+    @media (max-width: 1200px) { .home-layout { grid-template-columns: repeat(2, 1fr) 280px; } }
+    @media (max-width: 768px) {
         .home-layout { grid-template-columns: 1fr; }
+        .post-card.post-wide, .post-card.post-vertical, #create-post-card { grid-column: span 1; }
         .sidebar { display: none; }
+        .post-card.post-vertical { flex-direction: column; }
     }
 </style>
 
 <div class="home-layout">
-    <div class="main-feed">
-        <section class="stories-container animated-item">
-            <div class="stories-scroll">
-                <?php foreach ($stories as $story): ?>
-                    <div class="story-item">
-                        <div class="story-avatar">
-                            <img src="<?= htmlspecialchars($story['avatar']) ?>" alt="Avatar">
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+    <section id="create-post-card" class="animated-item">
+        <div class="create-post-compact">
+            <img src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Tu avatar" class="create-post-avatar">
+            <div class="create-post-placeholder">¿En qué estás pensando, Creador?</div>
+        </div>
+        <div class="create-post-expanded-content">
+            <textarea class="create-post-textarea" placeholder="Desata tu creatividad..."></textarea>
+            <div class="create-post-actions">
+                <div class="action-icons">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 12.5a2.5 2.5 0 01-2.5 2.5h-14a2.5 2.5 0 01-2.5-2.5v-5a2.5 2.5 0 012.5-2.5h14a2.5 2.5 0 012.5 2.5v5z"></path><path d="M6.5 12.5l3-3a2 2 0 013 0l4 4"></path><circle cx="15.5" cy="8.5" r="1.5"></circle></svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <button class="quimera-button">Publicar</button>
             </div>
         </section>
 
-        <?php foreach ($posts as $post): ?>
-            <article class="post-card animated-item">
-                <header class="post-header">
-                    <img src="<?= htmlspecialchars($post['autor_avatar']) ?>" alt="Avatar" class="post-avatar">
-                    <div>
-                        <strong><?= htmlspecialchars($post['autor_nombre']) ?></strong>
-                        <div style="font-size: 0.8rem; color: var(--c-text-secondary);"><?= htmlspecialchars($post['tiempo']) ?></div>
+    <?php foreach ($posts as $index => $post): ?>
+        <?php
+            $post_classes = 'post-card animated-item';
+            if ($post['type'] === 'wide') { $post_classes .= ' post-wide'; }
+            if ($post['type'] === 'vertical') { $post_classes .= ' post-vertical'; }
+        ?>
+        <article class="<?php echo $post_classes; ?>">
+            <header class="post-header">
+                 <img src="https://randomuser.me/api/portraits/lego/<?php echo $index+2; ?>.jpg" alt="Avatar" class="post-avatar">
+                 <strong><?php echo htmlspecialchars($post['autor_nombre']); ?></strong>
+            </header>
+            <div class="post-body">
+                <p><?php echo htmlspecialchars($post['contenido']); ?></p>
+                <?php if ($post['imagen']): ?>
+                    <div class="post-image-container">
+                        <img src="<?php echo htmlspecialchars($post['imagen']); ?>" alt="Imagen del post" class="post-image">
                     </div>
-                </header>
-                <div class="post-content">
-                    <p><?= preg_replace('/(#[a-zA-Z0-9_]+)/', '<a href="#">$1</a>', htmlspecialchars($post['contenido'])) ?></p>
-                </div>
-                <?php if (isset($post['imagen']) && $post['imagen']): ?>
-                    <img src="<?= htmlspecialchars($post['imagen']) ?>" alt="Imagen del post" class="post-image">
                 <?php endif; ?>
-                <footer class="post-footer">
-                    <div class="post-actions">
-                        <button class="action-button like-button">
-                             <svg class="heart-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                             <span><?= $post['likes'] ?></span>
-                        </button>
-                        <button class="action-button">
-                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10z"></path></svg>
-                             <span><?= $post['comentarios'] ?></span>
-                        </button>
-                    </div>
-                </footer>
-            </article>
-        <?php endforeach; ?>
-    </div>
+            </div>
+        </article>
+    <?php endforeach; ?>
 
     <aside class="sidebar animated-item">
         <div class="trends-container">
-            <h3>Tendencias</h3>
-            <ul class="trends-list kinetic-text-container">
+            <h3>Tendencias para ti</h3>
+            <ul class="trends-list">
                 <?php foreach ($tendencias as $tendencia): ?>
-                    <li><a href="#" class="kinetic-text"><?= htmlspecialchars($tendencia) ?></a></li>
+                    <li><a href="#"><?php echo htmlspecialchars($tendencia); ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>
     </aside>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // Animaciones de entrada
-    const animatedItems = document.querySelectorAll('.animated-item');
-    if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add('is-visible');
-                    }, index * 100);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        animatedItems.forEach(item => observer.observe(item));
-    } else {
-        animatedItems.forEach(item => item.classList.add('is-visible'));
-    }
-
-    // Script para Cristal Líquido
-    const rippleCards = document.querySelectorAll('.post-card');
-    rippleCards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            card.style.setProperty('--ripple-x', x + 'px');
-            card.style.setProperty('--ripple-y', y + 'px');
-        });
-    });
-
-    // Script para Texto Cinético
-    const kineticTexts = document.querySelectorAll('.kinetic-text');
-    kineticTexts.forEach(text => {
-        const originalText = text.textContent;
-        const letters = originalText.split('').map(letter => `<span class="char">${letter}</span>`).join('');
-        text.innerHTML = letters;
-        
-        Array.from(text.children).forEach(char => {
-            char.style.setProperty('--dx', `${(Math.random() - 0.5) * 20}px`);
-            char.style.setProperty('--dy', `${(Math.random() - 0.5) * 20}px`);
-            char.style.setProperty('--r', `${(Math.random() - 0.5) * 30}deg`);
-        });
-    });
-});
-</script>
-
 <?php
-    // Incluimos el pie de página
     include 'pie_quimera.php'; 
 ?>

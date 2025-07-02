@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (Estable v1.2)
+// ARCHIVO: plantilla_quimera.php (v1.4 - Estable)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -7,46 +7,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trendly - Quimera</title> 
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
-        /* --- SISTEMA DE DISEÑO QUIMERA v1.2 (Estable) --- */
+        /* --- SISTEMA DE DISEÑO QUIMERA v1.4 --- */
         :root {
             --font-main: 'Inter', -apple-system, sans-serif;
             --radius-xl: 32px; --radius-lg: 24px; --radius-md: 16px; --radius-sm: 12px;
             --nav-width: 280px; --nav-width-collapsed: 90px;
             --transition-fast: 0.2s; --transition-medium: 0.4s;
             --blur-heavy: 32px;
+            --c-accent-h: 260; 
+            --c-accent-s: 80%;
+            --c-accent-l: 70%;
         }
         body, body.theme-aurora {
             --c-bg: #0D1117; --c-text: #E6EDF3; --c-text-secondary: #8B949E; --c-text-tertiary: #484F58;
-            --c-accent: #8865E8; --c-accent-text: #FFFFFF; --c-glass-bg: hsla(215, 25%, 15%, 0.4);
-            --c-glass-border: hsla(215, 25%, 100%, 0.1); --c-glass-border-hover: hsla(270, 80%, 70%, 0.6);
+            --c-accent: hsl(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l)); 
+            --c-accent-text: #FFFFFF; --c-glass-bg: hsla(215, 25%, 15%, 0.4);
+            --c-glass-border: hsla(215, 25%, 100%, 0.1); --c-glass-border-hover: hsla(var(--c-accent-h), 80%, 70%, 0.6);
             --aurora-opacity: 1;
         }
         body.theme-dark {
-            --c-bg: #000000; --c-text: #EAEAEA; --c-text-secondary: #999999; --c-text-tertiary: #444444;
+            --c-bg: #000000; --c-text: #EAEAEA; --c-text-secondary: #999999;
             --c-accent: #FFFFFF; --c-accent-text: #000000; --c-glass-bg: rgba(22, 22, 22, 0.5);
-            --c-glass-border: rgba(255, 255, 255, 0.12); --c-glass-border-hover: rgba(255, 255, 255, 0.4);
-            --aurora-opacity: 0;
+            --c-glass-border: rgba(255, 255, 255, 0.12); --aurora-opacity: 0;
         }
         body.theme-light {
-            --c-bg: #F0F2F5; --c-text: #050505; --c-text-secondary: #65676B; --c-text-tertiary: #CED0D4;
+            --c-bg: #F0F2F5; --c-text: #050505; --c-text-secondary: #65676B;
             --c-accent: #1877F2; --c-accent-text: #FFFFFF; --c-glass-bg: rgba(255, 255, 255, 0.7);
-            --c-glass-border: rgba(0, 0, 0, 0.08); --c-glass-border-hover: rgba(0, 0, 0, 0.25);
-            --aurora-opacity: 0;
+            --c-glass-border: rgba(0, 0, 0, 0.08); --aurora-opacity: 0;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body { font-family: var(--font-main); background-color: var(--c-bg); color: var(--c-text); transition: background-color var(--transition-medium) ease; }
+        body { font-family: var(--font-main); background-color: var(--c-bg); color: var(--c-text); transition: background-color var(--transition-medium) ease, color var(--transition-medium) ease; }
         #aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; transition: opacity var(--transition-medium) ease; opacity: var(--aurora-opacity); }
-        .aurora-blob { position: absolute; border-radius: 50%; filter: blur(150px); will-change: transform; }
-        .aurora-blob:nth-child(1) { width: 40vmax; height: 40vmax; background: hsla(260, 80%, 70%, 0.3); top: -10%; left: -15%; animation: move-blob-1 35s ease-in-out infinite alternate; }
-        .aurora-blob:nth-child(2) { width: 50vmax; height: 50vmax; background: hsla(190, 80%, 60%, 0.3); bottom: -20%; right: -10%; animation: move-blob-2 40s ease-in-out infinite alternate; }
+        .aurora-blob { position: absolute; border-radius: 50%; filter: blur(150px); will-change: transform; transition: background 1s ease; }
+        .aurora-blob:nth-child(1) { width: 40vmax; height: 40vmax; background: hsla(var(--c-accent-h), 80%, 70%, 0.3); top: -10%; left: -15%; animation: move-blob-1 35s ease-in-out infinite alternate; }
+        .aurora-blob:nth-child(2) { width: 50vmax; height: 50vmax; background: hsla(calc(var(--c-accent-h) + 60), 80%, 60%, 0.3); bottom: -20%; right: -10%; animation: move-blob-2 40s ease-in-out infinite alternate; }
         @keyframes move-blob-1 { to { transform: translate(15vw, 10vh) scale(1.3); } }
         @keyframes move-blob-2 { to { transform: translate(-10vw, -15vh) scale(0.8); } }
 
@@ -84,7 +84,7 @@
             content: ''; position: absolute; left: 0; top: 50%;
             transform: translateY(-50%); width: 4px; height: 0%;
             background-color: var(--c-accent); border-radius: 99px;
-            transition: height var(--transition-medium) ease; display: none;
+            transition: height var(--transition-medium) ease, background-color var(--transition-medium) ease; display: none;
         }
         body.nav-expanded .nav-link::before { display: block; left: 10px; }
         .nav-link.active::before { height: 60%; }
@@ -143,6 +143,11 @@
                 <a href="/perfil.php" class="nav-link">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><path d="M12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg>
                     <span class="nav-link-text">Perfil</span>
+                </a>
+                <a href="#" id="sound-toggle" class="nav-link" title="Activar/Desactivar Sonido">
+                    <svg id="sound-on-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 010 7.07"></path></svg>
+                    <svg id="sound-off-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display: none;"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M23 9l-6 6"></path><path d="M17 9l6 6"></path></svg>
+                    <span class="nav-link-text">Sonido</span>
                 </a>
                 <div id="theme-switcher">
                     <button class="theme-button active" id="btn-aurora" data-theme="theme-aurora" title="Tema Aurora"></button>
