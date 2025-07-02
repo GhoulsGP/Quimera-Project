@@ -239,7 +239,7 @@
     <main class="auth-container">
         <div class="auth-panel">
             <div class="auth-header">
-                <h1>Trendly</h1>
+                <h1>Quimera</h1>
                 <p>Conecta. Descubre. Inspira.</p>
             </div>
 
