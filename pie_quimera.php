@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v8.4 - Lógica de Interacción de Posts)
+// ARCHIVO: pie_quimera.php (v9.0 - FINAL, Sistema Estable)
 ?>
         </main>
     </div>
@@ -117,22 +117,57 @@
         if (searchTrigger && searchPalette) {
             const searchBackdrop = searchPalette.querySelector('.search-backdrop');
             const searchInput = searchPalette.querySelector('#search-input-field');
+            const searchResultsList = searchPalette.querySelector('#search-results-list');
+            
             const openSearch = (e) => { e.preventDefault(); searchPalette.style.display = 'flex'; setTimeout(() => searchPalette.classList.add('open'), 10); searchInput.focus(); };
-            const closeSearch = () => { searchPalette.classList.remove('open'); setTimeout(() => { searchPalette.style.display = 'none'; searchInput.value = ''; }, 200); };
+            const closeSearch = () => { searchPalette.classList.remove('open'); setTimeout(() => { searchPalette.style.display = 'none'; searchInput.value = ''; if(searchResultsList) searchResultsList.innerHTML = ''; }, 200); };
+            
             searchTrigger.addEventListener('click', openSearch);
             searchBackdrop.addEventListener('click', closeSearch);
         }
 
-        // --- LÓGICA DE NOTIFICACIONES ---
+        // --- LÓGICA DE NOTIFICACIONES (COMPLETA Y RESTAURADA) ---
         const notificationsTrigger = document.getElementById('notifications-trigger');
         const notificationsPopover = document.getElementById('notifications-popover');
-        if (notificationsTrigger && notificationsPopover) {
-             notificationsTrigger.addEventListener('click', (e) => {
+        const mainNav = document.getElementById('main-nav');
+        if (notificationsTrigger && notificationsPopover && mainNav) {
+            const notificationsList = document.getElementById('notifications-list');
+            const dummyNotifications = [
+                { type: 'like', by: ['Elena Codes', 'David UX', 'Ana Design', 'Carlos Dev'], post: 'tu post "UX de Lujo"', count: 4, avatar: '9' },
+                { type: 'comment', by: 'Marco Polo', on: 'tu post "Arquitectura CSS"', text: '¡Excelente análisis de la arquitectura! Muy claro.', avatar: '3' },
+                { type: 'follow', by: 'Jane Dev', avatar: '4' }
+            ];
+            const renderNotifications = () => {
+                if(!notificationsList) return;
+                notificationsList.innerHTML = '';
+                dummyNotifications.forEach(n => {
+                    const li = document.createElement('li');
+                    li.className = 'notification-item';
+                    let contentHTML = '';
+                    if (n.type === 'like') {
+                        contentHTML = `<img src="https://randomuser.me/api/portraits/lego/${n.avatar}.jpg" alt="Avatar" class="notification-avatar"><div class="notification-content"><b>${n.by[0]}</b> y <b>${n.count - 1} personas más</b> han indicado que les gusta ${n.post}.</div>`;
+                    } else if (n.type === 'comment') {
+                        contentHTML = `<img src="https://randomuser.me/api/portraits/lego/${n.avatar}.jpg" alt="Avatar" class="notification-avatar"><div class="notification-content"><b>${n.by}</b> ha comentado en ${n.on}:<span class="post-quote">${n.text}</span><div class="notification-footer"><button class="inline-action-button">Responder</button></div></div>`;
+                    } else if (n.type === 'follow') {
+                        contentHTML = `<img src="https://randomuser.me/api/portraits/lego/${n.avatar}.jpg" alt="Avatar" class="notification-avatar"><div class="notification-content"><b>${n.by}</b> ha comenzado a seguirte.</div>`;
+                    }
+                    li.innerHTML = contentHTML;
+                    notificationsList.appendChild(li);
+                });
+            };
+            notificationsTrigger.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                notificationsPopover.classList.toggle('open');
-             });
-             document.addEventListener('click', (e) => {
+                const triggerRect = notificationsTrigger.getBoundingClientRect();
+                const navRect = mainNav.getBoundingClientRect();
+                const topPosition = triggerRect.top - navRect.top;
+                notificationsPopover.style.top = `${topPosition}px`;
+                const isOpen = notificationsPopover.classList.toggle('open');
+                if (isOpen) {
+                    renderNotifications();
+                }
+            });
+            document.addEventListener('click', (e) => {
                 if (!notificationsPopover.contains(e.target) && !notificationsTrigger.contains(e.target)) {
                     notificationsPopover.classList.remove('open');
                 }
@@ -144,56 +179,38 @@
         const messageCenter = document.getElementById('message-center');
         if (messagesTrigger && messageCenter) {
             const mcBackdrop = messageCenter.querySelector('.mc-backdrop');
-            const openMessageCenter = () => {
-                messageCenter.style.display = 'flex';
-                setTimeout(() => messageCenter.classList.add('open'), 10);
-            };
-            const closeMessageCenter = () => {
-                messageCenter.classList.remove('open');
-                setTimeout(() => messageCenter.style.display = 'none', 400);
-            };
-            messagesTrigger.addEventListener('click', (e) => {
-                e.preventDefault();
-                openMessageCenter();
-            });
-            if (mcBackdrop) {
-                mcBackdrop.addEventListener('click', closeMessageCenter);
-            }
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && messageCenter.classList.contains('open')) {
-                    closeMessageCenter();
-                }
-            });
+            const openMessageCenter = () => { messageCenter.style.display = 'flex'; setTimeout(() => messageCenter.classList.add('open'), 10); };
+            const closeMessageCenter = () => { messageCenter.classList.remove('open'); setTimeout(() => messageCenter.style.display = 'none', 400); };
+            messagesTrigger.addEventListener('click', (e) => { e.preventDefault(); openMessageCenter(); });
+            if (mcBackdrop) { mcBackdrop.addEventListener('click', closeMessageCenter); }
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && messageCenter.classList.contains('open')) { closeMessageCenter(); } });
         }
-
+        
         // --- LÓGICA DE INTERACCIÓN DE POSTS ---
-        const likeButtons = document.querySelectorAll('.like-button');
-        likeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                button.classList.toggle('active');
-            });
-        });
+        const feedContainer = document.querySelector('.feed-container');
+        if(feedContainer) {
+            feedContainer.addEventListener('click', (e) => {
+                const likeButton = e.target.closest('.like-button');
+                const saveButton = e.target.closest('.save-button');
+                const commentButton = e.target.closest('.comment-button');
 
-        const saveButtons = document.querySelectorAll('.save-button');
-        saveButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                button.classList.toggle('active');
-            });
-        });
-
-        const commentButtons = document.querySelectorAll('.comment-button');
-        commentButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const postCard = button.closest('.post-card');
-                if (postCard) {
-                    const commentsSection = postCard.querySelector('.post-comments-section');
-                    if (commentsSection) {
-                        commentsSection.classList.toggle('open');
+                if (likeButton) {
+                    likeButton.classList.toggle('active');
+                }
+                if (saveButton) {
+                    saveButton.classList.toggle('active');
+                }
+                if (commentButton) {
+                    const postCard = commentButton.closest('.post-card');
+                    if (postCard) {
+                        const commentsSection = postCard.querySelector('.post-comments-section');
+                        if (commentsSection) {
+                            commentsSection.classList.toggle('open');
+                        }
                     }
                 }
             });
-        });
-
+        }
     });
     </script>
 </body>
