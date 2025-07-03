@@ -27,13 +27,20 @@ After logging in, youâ€™ll see the main page. This is where everything happensâ€
 --- 
 
 
-### Search Panel
+## Search Panel
 <img width="1280" alt="Quimera Search Panel" src="https://github.com/user-attachments/assets/8dfd13e8-7d5a-4a13-bf91-92bdd2bfda98" />
 
+--- 
 
-### Notifications panel
 
-<img width="1280" alt="image" src="https://github.com/user-attachments/assets/c9564f09-03c2-4363-ac83-cc9df89b34fc" />
+## Notifications Panel
+<img width="1280" alt="noti" src="https://github.com/user-attachments/assets/fbe5e62a-02e8-4c23-957d-976042b2a374" />
+
+---
+
+## Messages Panel
+<img width="1280" alt="image" src="https://github.com/user-attachments/assets/ac610da6-0188-4694-b2d1-994b67184e09" />
+
 
 
 
