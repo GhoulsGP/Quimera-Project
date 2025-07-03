@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v5.2 - Definitiva)
+// ARCHIVO: plantilla_quimera.php (v5.2 - Estable)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -25,7 +25,7 @@
             --c-bg: #0D1117; --c-text: #E6EDF3; --c-text-secondary: #8B949E; --c-text-tertiary: #484F58;
             --c-accent: hsl(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l)); 
             --c-accent-text: #FFFFFF; --c-glass-bg: hsla(215, 25%, 15%, 0.5);
-            --c-glass-border: hsla(215, 25%, 100%, 0.1); --c-glass-border-hover: hsla(var(--c-accent-h), 80%, 70%, 0.6);
+            --c-glass-border: hsla(215, 25%, 100%, 0.1);
             --aurora-opacity: 1;
         }
         body.theme-dark {

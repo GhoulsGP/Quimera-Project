@@ -74,7 +74,7 @@
                 const columns = [gridColumns[0], gridColumns[1]];
                 columns.forEach(col => col.innerHTML = '');
 
-                if (window.innerWidth <= 768) {
+                if (window.innerWidth <= 1024) { // CORRECCIÓN RESPONSIVA
                     posts.forEach(post => {
                         columns[0].appendChild(post.cloneNode(true));
                     });

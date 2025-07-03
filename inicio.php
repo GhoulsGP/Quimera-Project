@@ -1,16 +1,15 @@
 <?php 
-    // ARCHIVO: inicio.php (v5.2 - Corrección Definitiva)
+    // ARCHIVO: inicio.php (v5.2 - Corrección Responsiva Definitiva)
 
     include 'plantilla_quimera.php';
     
     // Datos de prueba
     $posts = [
-        [ 'autor_nombre' => 'Elena Codes', 'type' => 'wide', 'contenido' => 'Esta es la maquetación definitiva. Robusta, adaptable y sin errores visuales.', 'imagen' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop', 'comments' => [['user' => 'Carlos Dev', 'text' => 'Ahora sí. Impecable.']]],
-        [ 'autor_nombre' => 'Ana Design', 'type' => 'vertical', 'contenido' => 'Incluso con imágenes verticales, el flujo se mantiene perfecto.', 'imagen' => 'https://images.unsplash.com/photo-1511300636412-01634217b4e6?q=80&w=1887&auto=format&fit=crop', 'comments' => []],
+        [ 'autor_nombre' => 'Elena Codes', 'type' => 'wide', 'contenido' => 'El layout móvil y los botones de acción han sido corregidos de forma definitiva. Todo funciona y se ve como debería.', 'imagen' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop', 'comments' => [['user' => 'Carlos Dev', 'text' => 'Ahora sí. Impecable.']]],
+        [ 'autor_nombre' => 'Ana Design', 'type' => 'vertical', 'contenido' => 'Probando la funcionalidad de comentarios en un post vertical. El hover de lujo está de vuelta y funciona en todos los botones.', 'imagen' => 'https://images.unsplash.com/photo-1511300636412-01634217b4e6?q=80&w=1887&auto=format&fit=crop', 'comments' => []],
         [ 'autor_nombre' => 'Carlos Dev', 'type' => 'normal', 'contenido' => 'Un post de solo texto.', 'imagen' => null, 'comments' => []],
-        [ 'autor_nombre' => 'David UX', 'type' => 'normal', 'contenido' => 'Cada tarjeta se adapta a su contenido sin romper el layout general.', 'imagen' => null, 'comments' => []],
     ];
-    $tendencias = ['#QuimeraProject', '#StableBuild', '#FinalFix', '#UX'];
+    $tendencias = ['#QuimeraProject', '#ResponsiveFix', '#UX', '#Stable'];
 ?>
 
 <style>
@@ -28,8 +27,6 @@
     .post-image { width: 100%; display: block; }
     .post-type-wide .post-image-container { max-height: 450px; aspect-ratio: 16 / 9; object-fit: cover; }
     .post-type-vertical .post-image-container { max-height: 500px; aspect-ratio: 4 / 5; object-fit: cover; }
-
-    /* --- BOTONES DE ACCIÓN (COMPLETO Y VERIFICADO) --- */
     .post-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--c-glass-border); padding-top: 16px; margin-top: auto; }
     .post-actions-main { display: flex; gap: 8px; }
     .action-button {
@@ -47,7 +44,6 @@
     .action-button:hover::after { opacity: 1; transform: scale(1.2); }
     .action-button.active { color: var(--c-accent); }
     .action-button.active svg { fill: var(--c-accent); }
-    
     .post-comments-section { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out, opacity 0.5s ease-in-out; opacity: 0; border-top: 1px solid var(--c-glass-border); }
     .post-comments-section.open { max-height: 500px; margin-top: 16px; padding-top: 16px; opacity: 1; }
     .comment { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
@@ -61,7 +57,6 @@
     .comment-send-btn { background: var(--c-accent); border: none; border-radius: 50%; width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; }
     .comment-send-btn:hover { transform: scale(1.1); }
     .comment-send-btn svg { stroke: var(--c-accent-text); width: 18px; height: 18px; }
-
     .trends-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; }
     .trends-container h3 { margin-bottom: 16px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
     .trends-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; }
@@ -70,8 +65,15 @@
     .char { display: inline-block; }
     @keyframes kinetic-scramble { 0%{transform:translate(0,0)} 50%{transform:translate(var(--dx),var(--dy)) rotate(var(--r))} 100%{transform:translate(0,0)} }
 
-    @media (max-width: 1024px) { .home-layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
-    @media (max-width: 768px) { .feed-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 1024px) {
+        .home-layout { grid-template-columns: 1fr; }
+        .sidebar { display: none; }
+        .feed-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+        main.content-area { padding: 16px; }
+        .post-card { padding: 16px; }
+    }
 </style>
 
 <div class="home-layout">
