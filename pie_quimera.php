@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v5.2 - Corrección de Eventos)
+// ARCHIVO: pie_quimera.php (v6.0 - Definitiva)
 ?>
         </main>
     </div>
@@ -32,63 +32,33 @@
         // --- SCRIPTS ESPECÍFICOS DE LA PÁGINA DE INICIO ---
         if(document.querySelector('.home-layout')) {
 
-            const feedGrid = document.querySelector('.feed-grid');
-            const postTemplates = document.getElementById('post-templates');
-            const gridColumns = feedGrid.querySelectorAll('.feed-grid-col');
+            // --- LÓGICA DE INTERACCIÓN DE TARJETAS (RESTAURADA Y VERIFICADA) ---
+            document.querySelectorAll('.post-card').forEach(card => {
+                const likeButton = card.querySelector('.like-button');
+                const commentButton = card.querySelector('.comment-button');
+                const saveButton = card.querySelector('.save-button');
+                const commentsSection = card.querySelector('.post-comments-section');
 
-            function attachCardEventListeners() {
-                document.querySelectorAll('.feed-grid .post-card').forEach(card => {
-                    if (card.dataset.eventsAttached) return;
-
-                    const likeButton = card.querySelector('.like-button');
-                    const commentButton = card.querySelector('.comment-button');
-                    const saveButton = card.querySelector('.save-button');
-                    const commentsSection = card.querySelector('.post-comments-section');
-
-                    if (likeButton) { 
-                        likeButton.addEventListener('click', (e) => { 
-                            e.stopPropagation();
-                            likeButton.classList.toggle('active'); 
-                        }); 
-                    }
-                    if (commentButton && commentsSection) { 
-                        commentButton.addEventListener('click', (e) => { 
-                            e.stopPropagation();
-                            commentsSection.classList.toggle('open'); 
-                        }); 
-                    }
-                    if (saveButton) { 
-                        saveButton.addEventListener('click', (e) => {
-                            e.stopPropagation(); 
-                            saveButton.classList.toggle('active'); 
-                        }); 
-                    }
-                    card.dataset.eventsAttached = 'true';
-                });
-            }
-
-            function distributePosts() {
-                if (!feedGrid || !postTemplates || gridColumns.length === 0) return;
-                
-                const posts = Array.from(postTemplates.children);
-                const columns = [gridColumns[0], gridColumns[1]];
-                columns.forEach(col => col.innerHTML = '');
-
-                if (window.innerWidth <= 1024) { // CORRECCIÓN RESPONSIVA
-                    posts.forEach(post => {
-                        columns[0].appendChild(post.cloneNode(true));
-                    });
-                } else {
-                    posts.forEach((post, index) => {
-                        columns[index % 2].appendChild(post.cloneNode(true));
-                    });
+                if (likeButton) { 
+                    likeButton.addEventListener('click', (e) => { 
+                        e.stopPropagation();
+                        likeButton.classList.toggle('active'); 
+                    }); 
                 }
-                attachCardEventListeners();
-            }
+                if (commentButton && commentsSection) { 
+                    commentButton.addEventListener('click', (e) => { 
+                        e.stopPropagation();
+                        commentsSection.classList.toggle('open'); 
+                    }); 
+                }
+                if (saveButton) { 
+                    saveButton.addEventListener('click', (e) => {
+                        e.stopPropagation(); 
+                        saveButton.classList.toggle('active'); 
+                    }); 
+                }
+            });
 
-            window.addEventListener('load', distributePosts);
-            window.addEventListener('resize', distributePosts);
-            
             // --- TEXTO CINÉTICO (VERIFICADO) ---
             const kineticTexts = document.querySelectorAll('.kinetic-text');
             kineticTexts.forEach(text => {

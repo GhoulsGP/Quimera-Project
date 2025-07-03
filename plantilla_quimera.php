@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v5.2 - Estable)
+// ARCHIVO: plantilla_quimera.php (v6.0 - Definitiva)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -17,9 +17,7 @@
             --nav-width: 280px; --nav-width-collapsed: 90px;
             --transition-fast: 0.2s; --transition-medium: 0.4s;
             --blur-heavy: 32px; --blur-light: 16px;
-            --c-accent-h: 260; 
-            --c-accent-s: 80%;
-            --c-accent-l: 70%;
+            --c-accent-h: 260; --c-accent-s: 80%; --c-accent-l: 70%;
         }
         body, body.theme-aurora {
             --c-bg: #0D1117; --c-text: #E6EDF3; --c-text-secondary: #8B949E; --c-text-tertiary: #484F58;
@@ -49,9 +47,9 @@
         @keyframes move-blob-1 { to { transform: translate(15vw, 10vh) scale(1.3); } }
         @keyframes move-blob-2 { to { transform: translate(-10vw, -15vh) scale(0.8); } }
         .layout-wrapper { display: flex; }
-        main.content-area { width: 100%; padding: 32px; margin-left: var(--nav-width-collapsed); transition: margin-left var(--transition-medium) ease; }
-        body.nav-expanded main.content-area { margin-left: var(--nav-width); }
-        #main-nav { position: fixed; top: 16px; left: 16px; height: calc(100vh - 32px); width: var(--nav-width-collapsed); background: var(--c-glass-bg); backdrop-filter: blur(var(--blur-heavy)); border: 1px solid var(--c-glass-border); border-radius: var(--radius-xl); padding: 24px 0; display: flex; flex-direction: column; align-items: center; z-index: 100; transition: width var(--transition-medium) ease, background var(--transition-medium) ease; }
+        main.content-area { width: 100%; padding: 32px; padding-left: calc(var(--nav-width-collapsed) + 32px); transition: padding-left var(--transition-medium) ease; }
+        body.nav-expanded main.content-area { padding-left: calc(var(--nav-width) + 32px); }
+        #main-nav { position: fixed; top: 16px; left: 16px; height: calc(100vh - 32px); width: var(--nav-width-collapsed); background: var(--c-glass-bg); backdrop-filter: blur(var(--blur-heavy)); border: 1px solid var(--c-glass-border); border-radius: var(--radius-xl); padding: 24px 0; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: width var(--transition-medium) ease, background var(--transition-medium) ease; }
         body.nav-expanded #main-nav { width: var(--nav-width); }
         #main-nav ul { list-style: none; width: 100%; padding: 0;}
         .nav-link { display: flex; align-items: center; justify-content: center; width: 100%; height: 56px; color: var(--c-text-secondary); text-decoration: none; font-weight: 600; font-size: 1rem; position: relative; padding: 0; }
@@ -78,6 +76,13 @@
         #btn-aurora { background: linear-gradient(45deg, hsl(210, 80%, 50%), hsl(260, 80%, 60%)); }
         #btn-dark { background: #000; }
         #btn-light { background: #fff; }
+
+        @media (max-width: 768px) {
+            main.content-area {
+                padding: 14px;
+                padding-left: calc(var(--nav-width-collapsed) + 32px);
+            }
+        }
     </style>
 </head>
 <body class="theme-aurora">
