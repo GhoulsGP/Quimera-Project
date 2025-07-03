@@ -1,25 +1,25 @@
 # Quimera Project
 
 ## What is Quimera?
-Quimera is an open source social network developed solely by me, GhoulsGP, using JavaScript and PHP. The project aims to provide a modern, interactive platform for users to connect, share content, and engage with each other. All development, design, and implementation are managed independently, with a focus on learning, experimentation, and community contribution.
+Quimera is an open-source social network I’m building solo, using JavaScript and PHP. The goal is to have a straightforward, modern spot where people can meet, share, and interact. Everything from the code to the design is managed by me, and the project is open for anyone who’s interested in checking it out or helping.
 
 ---
 
 #### Login/Register Page
-This is the entry point for new and returning users. The login/register page provides a simple and secure authentication process, ensuring that user data is kept safe. New users can easily create an account, while existing users can log in with their credentials. The UI is designed for ease of use, with clear error messages and guidance to help users access their accounts quickly.
+This is where you start. If you’re new, you can register; if not, just log in. The process is simple and keeps your info safe. The interface is clear, and if you hit any issues, the error messages should help you sort it out.
 ![image](https://github.com/user-attachments/assets/ed4363e3-8026-4102-928c-c10c26f8b432)
 
 ---
 
 #### Main Page
-Once logged in, users are taken to the main page, which serves as the hub for all interactions on Quimera. This page is dynamically updated to show the latest posts, comments, and friend activities. The layout is intuitive, with quick access to all the core features.
+After logging in, you’ll see the main page. This is where everything happens—new posts, comments, and what your friends are up to, all get updated in real time. The design is straightforward and easy to get around.
 
-**Functionalities:**
-- **Like Button:** Allows users to express appreciation for posts. Liking a post helps surface popular content and encourages engagement.
-- **Comment Button (with proper section):** Users can leave comments on posts, fostering discussion and community interaction. Comments are displayed in an organized, threaded section for clarity.
-- **Save Post Button:** Users can bookmark posts for later viewing, making it easy to keep track of interesting or important content.
-- **Vertical Navbar:** The navigation bar on the side provides quick access to all major sections, such as Home, Profile, Messages, and Settings. Its vertical orientation maximizes screen space and improves navigation efficiency.
-- **Theme Changer:** Users can switch between light and dark themes, or other available themes, to match their preferences and enhance usability in different environments.
+**Features:**
+- **Like Button:** Like posts you enjoy. It helps highlight good content.
+- **Comment Button (with proper section):** Leave your thoughts or reply to others. Comments stay organized in threads.
+- **Save Post Button:** Save posts that you want to come back to later.
+- **Vertical Navbar:** Quick links to Home, Profile, Messages, and Settings on the side.
+- **Theme Changer:** Switch between different themes, including light and dark.
 
 ![image](https://github.com/user-attachments/assets/23238dbb-ff77-41af-a090-0bc083aaabae)
 
@@ -27,14 +27,14 @@ Once logged in, users are taken to the main page, which serves as the hub for al
 ---
 
 ## Technologies Used
-- **PHP:** Backend logic and server-side rendering.
-- **JavaScript:** Client-side interactivity and dynamic content updates.
-- **HTML/CSS:** Structure and styling of the frontend.
+- **PHP:**  Handles the backend.
+- **JavaScript:** Manages interactive and dynamic parts.
+- **HTML/CSS:** Builds the structure and style.
 
 ---
 
 ## Contributing
-Contributions are welcome! If you have suggestions or want to report bugs, please open an issue or submit a pull request. Make sure to follow the code style guidelines and include relevant tests where applicable.
+If you want to report a bug, suggest something, or help out, feel free to open an issue or make a pull request. Please follow the code style and add tests if you can.
 
 ---
 
