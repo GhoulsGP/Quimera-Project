@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v7.0 - Arquitectura de Navegación Definitiva)
+// ARCHIVO: plantilla_quimera.php (v7.3 - Centrado de Búsqueda)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -78,59 +78,33 @@
         #btn-dark { background: #000; }
         #btn-light { background: #fff; }
 
+        /* --- ESTILOS PALETA DE BÚSQUEDA --- */
+        .search-palette { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .search-palette.open { display: flex; }
+        .search-backdrop { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: hsla(215, 25%, 5%, 0.5); backdrop-filter: blur(12px); }
+        .search-container { position: relative; width: 100%; max-width: 600px; background: var(--c-glass-bg); border: 1px solid var(--c-glass-border); border-radius: var(--radius-lg); box-shadow: 0 16px 40px hsla(0, 0%, 0%, 0.3); }
+        .search-input-wrapper { display: flex; align-items: center; padding: 12px 24px; border-bottom: 1px solid var(--c-glass-border); }
+        .search-input-wrapper svg { width: 24px; height: 24px; stroke: var(--c-text-secondary); margin-right: 16px; }
+        #search-input-field { width: 100%; background: transparent; border: none; outline: none; color: var(--c-text); font-size: 1.2rem; font-weight: 500; font-family: var(--font-main); }
+        #search-input-field::placeholder { color: var(--c-text-secondary); }
+        #search-results-list { list-style: none; padding: 12px; margin: 0; max-height: 40vh; overflow-y: auto; }
+        .search-result-item { display: flex; align-items: center; gap: 16px; padding: 12px; border-radius: var(--radius-md); cursor: pointer; transition: background-color 0.2s ease; opacity: 0; animation: result-fade-in 0.5s ease forwards; }
+        @keyframes result-fade-in { to { opacity: 1; transform: translateY(0); } }
+        .search-result-item:hover { background: hsla(0, 0%, 100%, 0.05); }
+        .result-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+        .result-info { display: flex; flex-direction: column; }
+        .result-name { font-weight: 600; color: var(--c-text); }
+        .result-handle { color: var(--c-text-secondary); font-size: 0.9em; }
+
         @media (max-width: 768px) {
-            html {
-                font-size: 14px;
-            }
-            .desktop-toggle {
-                display: none;
-            }
-            .mobile-toggle {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                position: fixed;
-                top: 10px;
-                left: 10px;
-                width: 50px;
-                height: 50px;
-                z-index: 2001;
-                background: var(--c-glass-bg);
-                backdrop-filter: blur(8px);
-                border: 1px solid var(--c-glass-border);
-                border-radius: 50%;
-                color: var(--c-text);
-                text-decoration: none;
-            }
-            .mobile-toggle svg {
-                width: 24px;
-                height: 24px;
-                stroke: currentColor;
-            }
-            main.content-area {
-                padding: 16px;
-                padding-left: 16px;
-                transition: filter var(--transition-medium) ease;
-            }
-            body.nav-expanded main.content-area {
-                filter: brightness(0.6);
-                pointer-events: none;
-            }
-            #main-nav {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100vh;
-                border-radius: 0;
-                transform: translateX(-100%);
-                transition: transform var(--transition-medium) ease, width var(--transition-medium) ease;
-                z-index: 2000;
-                border-right: 1px solid var(--c-glass-border);
-                box-shadow: 5px 0 25px rgba(0,0,0,0.2);
-            }
-            body.nav-expanded #main-nav {
-                transform: translateX(0);
-            }
+            html { font-size: 14px; }
+            .desktop-toggle { display: none; }
+            .mobile-toggle { display: flex; align-items: center; justify-content: center; position: fixed; top: 10px; left: 10px; width: 50px; height: 50px; z-index: 2001; background: var(--c-glass-bg); backdrop-filter: blur(8px); border: 1px solid var(--c-glass-border); border-radius: 50%; color: var(--c-text); text-decoration: none; }
+            .mobile-toggle svg { width: 24px; height: 24px; stroke: currentColor; }
+            main.content-area { padding: 16px; padding-left: 16px; transition: filter var(--transition-medium) ease; }
+            body.nav-expanded main.content-area { filter: brightness(0.6); pointer-events: none; }
+            #main-nav { position: fixed; top: 0; left: 0; height: 100vh; border-radius: 0; transform: translateX(-100%); transition: transform var(--transition-medium) ease, width var(--transition-medium) ease; z-index: 2000; border-right: 1px solid var(--c-glass-border); box-shadow: 5px 0 25px rgba(0,0,0,0.2); }
+            body.nav-expanded #main-nav { transform: translateX(0); }
         }
     </style>
 </head>
@@ -147,8 +121,8 @@
         <nav id="main-nav">
             <div id="nav-header"><a href="/inicio.php" id="nav-logo"><span class="logo-full">Quimera</span><span class="logo-icon">Q</span></a></div>
             <ul>
-                <li><a href="#" class="nav-link active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path></svg><span class="nav-link-text">Inicio</span></a></li>
-                <li><a href="#" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 17.25a6.25 6.25 0 110-12.5 6.25 6.25 0 010 12.5z"></path><path d="M16 16l4.5 4.5"></path></svg><span class="nav-link-text">Explorar</span></a></li>
+                <li><a href="/inicio.php" class="nav-link active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path></svg><span class="nav-link-text">Inicio</span></a></li>
+                <li><a href="#" class="nav-link" id="search-trigger"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 17.25a6.25 6.25 0 110-12.5 6.25 6.25 0 010 12.5z"></path><path d="M16 16l4.5 4.5"></path></svg><span class="nav-link-text">Buscar</span></a></li>
                 <li><a href="#" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg><span class="nav-link-text">Notificaciones</span></a></li>
                 <li><a href="#" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h10a2 2 0 012 2v10z"></path></svg><span class="nav-link-text">Mensajes</span></a></li>
             </ul>
