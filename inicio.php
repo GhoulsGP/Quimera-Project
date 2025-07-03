@@ -1,5 +1,5 @@
 <?php 
-    // ARCHIVO: inicio.php (v6.0 - Corrección Definitiva)
+    // ARCHIVO: inicio.php (v6.4 - Restricción de altura de imagen)
 
     include 'plantilla_quimera.php';
     
@@ -23,10 +23,9 @@
     .post-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
     .post-author-name { font-weight: 600; }
     .post-body .post-content { line-height: 1.6; color: var(--c-text-secondary); }
-    .post-image-container { border-radius: var(--radius-md); overflow: hidden; margin-top: 8px; }
-    .post-image { width: 100%; display: block; }
-    .post-card[data-type="wide"] .post-image-container { max-height: 450px; aspect-ratio: 16 / 9; object-fit: cover; }
-    .post-card[data-type="vertical"] .post-image-container { max-height: 500px; aspect-ratio: 4 / 5; object-fit: cover; }
+    .post-image-container { border-radius: var(--radius-md); overflow: hidden; margin-top: 8px; max-height: 550px; }
+    .post-image { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .post-card[data-type="vertical"] .post-image-container { max-height: 500px; aspect-ratio: 4 / 5; }
     .post-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--c-glass-border); padding-top: 16px; margin-top: auto; }
     .post-actions-main { display: flex; gap: 8px; }
     .action-button { position: relative; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: transparent; border: none; color: var(--c-text-secondary); cursor: pointer; transition: color var(--transition-fast) ease; }
