@@ -1,5 +1,5 @@
 <?php 
-    // ARCHIVO: inicio.php (v6.7.3 - Corrección Definitiva de Overflow)
+    // ARCHIVO: inicio.php (v7.0 - Layout Móvil Unificado)
 
     include 'plantilla_quimera.php';
     
@@ -11,6 +11,16 @@
         [ 'autor_nombre' => 'David UX', 'type' => 'normal', 'contenido' => 'Cada tarjeta se adapta a su contenido sin romper el layout general.', 'imagen' => null, 'comments' => []],
     ];
     $tendencias = ['#QuimeraProject', '#StableBuild', '#FinalFix', '#UX'];
+    $sugerencias = [
+        ['nombre' => 'Marco Polo', 'handle' => '@marcop', 'avatar_id' => '3'],
+        ['nombre' => 'Jane Dev', 'handle' => '@janedev', 'avatar_id' => '4'],
+        ['nombre' => 'Alex UI', 'handle' => '@alexui', 'avatar_id' => '5']
+    ];
+    $actividad = [
+        ['label' => 'Vistas al Perfil', 'value' => 742, 'max' => 1000, 'color' => '210, 90%, 60%'],
+        ['label' => 'Interacciones', 'value' => 124, 'max' => 200, 'color' => '260, 80%, 70%'],
+        ['label' => 'Nuevos Contactos', 'value' => 18, 'max' => 25, 'color' => '310, 80%, 65%']
+    ];
 ?>
 
 <style>
@@ -63,29 +73,47 @@
     .kinetic-text:hover .char { animation: kinetic-scramble 0.8s ease-out forwards; }
     .char { display: inline-block; }
     @keyframes kinetic-scramble { 0%{transform:translate(0,0)} 50%{transform:translate(var(--dx),var(--dy)) rotate(var(--r))} 100%{transform:translate(0,0)} }
+    .suggestions-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; margin-top: 24px; }
+    .suggestions-container h3 { margin-bottom: 16px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
+    .suggestions-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 20px; }
+    .suggestion-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .suggestion-user-info { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .suggestion-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .suggestion-user-text { display: flex; flex-direction: column; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .suggestion-user-name { font-weight: 600; color: var(--c-text); }
+    .suggestion-user-handle { color: var(--c-text-secondary); font-size: 0.9em; }
+    .follow-button { background: hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.8); color: var(--c-accent-text); border: none; border-radius: 99px; padding: 8px 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease-out; flex-shrink: 0; font-size: 0.9em; }
+    .follow-button:hover { transform: scale(1.03); background: var(--c-accent); box-shadow: 0 4px 15px hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.3); }
+    .activity-summary-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; margin-top: 24px; }
+    .activity-summary-container h3 { margin-bottom: 20px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
+    .activity-list { display: flex; justify-content: space-around; align-items: flex-start; text-align: center; }
+    .activity-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .progress-ring { width: 70px; height: 70px; position: relative; }
+    .progress-ring__svg { transform: rotate(-90deg); }
+    .progress-ring__circle, .progress-ring__circle-bg { fill: transparent; stroke-width: 4; }
+    .progress-ring__circle-bg { stroke: hsla(0, 0%, 100%, 0.1); }
+    .progress-ring__circle { stroke-linecap: round; stroke: var(--stroke-color); stroke-dasharray: 113.1; stroke-dashoffset: calc(113.1 * (1 - var(--percentage, 0))); transition: stroke-dashoffset 1s 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); }
+    .progress-ring__value { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--c-text); font-weight: 600; font-size: 0.9em; }
+    .activity-item__label { font-size: 0.8em; color: var(--c-text-secondary); font-weight: 500; }
 
     @media (max-width: 1024px) {
-        .home-layout { grid-template-columns: 1fr; }
-        .sidebar { display: none; }
-        .feed-container { grid-template-columns: 1fr; }
+        .home-layout { 
+            grid-template-columns: 1fr;
+        }
+        .sidebar {
+            position: static; /* Para que fluya normalmente en el layout de una columna */
+            margin-top: 24px;
+        }
+        .feed-container { 
+            grid-template-columns: 1fr; 
+        }
     }
     @media (max-width: 768px) {
         .post-card[data-type="wide"] { grid-column: 1 / -1; }
-        .post-card {
-            padding: 12px;
-        }
-        .post-avatar {
-            width: 40px;
-            height: 40px;
-        }
-        .action-button {
-            width: 40px;
-            height: 40px;
-        }
-        .action-button svg {
-            width: 20px;
-            height: 20px;
-        }
+        .post-card { padding: 12px; }
+        .post-avatar { width: 40px; height: 40px; }
+        .action-button { width: 40px; height: 40px; }
+        .action-button svg { width: 20px; height: 20px; }
     }
 </style>
 
@@ -149,6 +177,41 @@
                     <li><a href="#" class="kinetic-text"><?php echo htmlspecialchars($tendencia); ?></a></li>
                 <?php endforeach; ?>
             </ul>
+        </div>
+        <div class="suggestions-container">
+            <h3>Sugerencias para ti</h3>
+            <ul class="suggestions-list">
+                <?php foreach ($sugerencias as $sugerencia): ?>
+                <li class="suggestion-item">
+                    <div class="suggestion-user-info">
+                        <img src="https://randomuser.me/api/portraits/lego/<?php echo htmlspecialchars($sugerencia['avatar_id']); ?>.jpg" alt="Avatar" class="suggestion-avatar">
+                        <div class="suggestion-user-text">
+                            <span class="suggestion-user-name"><?php echo htmlspecialchars($sugerencia['nombre']); ?></span>
+                            <span class="suggestion-user-handle"><?php echo htmlspecialchars($sugerencia['handle']); ?></span>
+                        </div>
+                    </div>
+                    <button class="follow-button">Seguir</button>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="activity-summary-container">
+            <h3>Resumen de Actividad</h3>
+            <div class="activity-list">
+                <?php foreach ($actividad as $stat): ?>
+                <div class="activity-item">
+                    <div class="progress-ring">
+                        <svg class="progress-ring__svg" width="70" height="70" viewBox="0 0 44 44">
+                            <circle class="progress-ring__circle-bg" r="18" cx="22" cy="22" />
+                            <circle class="progress-ring__circle" r="18" cx="22" cy="22"
+                                style="--percentage: <?php echo ($stat['value'] / $stat['max']); ?>; --stroke-color: hsl(<?php echo $stat['color']; ?>);" />
+                        </svg>
+                        <span class="progress-ring__value"><?php echo htmlspecialchars($stat['value']); ?></span>
+                    </div>
+                    <span class="activity-item__label"><?php echo htmlspecialchars($stat['label']); ?></span>
+                </div>
+                <?php endforeach; ?>
+            </div>
         </div>
     </aside>
 </div>
