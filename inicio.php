@@ -1,15 +1,29 @@
 <?php 
-    // ARCHIVO: inicio.php (v3.1 - Botones de Lujo)
+    // ARCHIVO: inicio.php (v3.2 - Comentarios Interactivos)
 
     include 'plantilla_quimera.php';
     
+    // Datos de prueba con comentarios
     $posts = [
-        [ 'autor_nombre' => 'Elena Codes', 'type' => 'wide', 'contenido' => 'Este post es ancho y ahora, con column-span, ocupa todo el espacio horizontal antes de que el contenido continúe fluyendo debajo en dos columnas. Es una solución robusta.', 'imagen' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop'],
-        [ 'autor_nombre' => 'Ana Design', 'type' => 'vertical', 'contenido' => 'Las imágenes verticales ahora encuentran su lugar en el flujo natural del layout de columnas. La altura de la tarjeta se adapta perfectamente.', 'imagen' => 'https://images.unsplash.com/photo-1511300636412-01634217b4e6?q=80&w=1887&auto=format&fit=crop'],
-        [ 'autor_nombre' => 'Carlos Dev', 'type' => 'normal', 'contenido' => 'Un post de solo texto, que fluye en la primera columna disponible.', 'imagen' => null],
-        [ 'autor_nombre' => 'David UX', 'type' => 'normal', 'contenido' => 'El layout de columnas es la técnica ideal para este tipo de contenido dinámico, evitando los huecos que generaba el grid anterior.', 'imagen' => null],
+        [ 
+            'autor_nombre' => 'Elena Codes', 'type' => 'wide', 'contenido' => 'He añadido una sección de comentarios que se despliega con una animación suave. Mucho más elegante que ir a otra página.', 'imagen' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop',
+            'comments' => [
+                ['user' => 'Carlos Dev', 'text' => '¡Funciona de maravilla! La transición es muy fluida.'],
+                ['user' => 'Ana Design', 'text' => 'Me encanta cómo se integra con el diseño de la tarjeta.'],
+            ]
+        ],
+        [ 
+            'autor_nombre' => 'Ana Design', 'type' => 'vertical', 'contenido' => 'Los nuevos botones de acción se sienten increíbles. El hover es de otro nivel.', 'imagen' => 'https://images.unsplash.com/photo-1511300636412-01634217b4e6?q=80&w=1887&auto=format&fit=crop',
+            'comments' => []
+        ],
+        [ 
+            'autor_nombre' => 'Carlos Dev', 'type' => 'normal', 'contenido' => 'Un post sin imagen para probar la funcionalidad de comentarios. Todo en su sitio.', 'imagen' => null,
+            'comments' => [
+                ['user' => 'David UX', 'text' => 'Perfecto.']
+            ]
+        ],
     ];
-    $tendencias = ['#QuimeraProject', '#LayoutFix', '#CSSColumns', '#RobustDesign', '#FutureWeb'];
+    $tendencias = ['#QuimeraProject', '#InteractiveUI', '#UX', '#FutureWeb'];
 ?>
 
 <style>
@@ -30,51 +44,43 @@
     .post-image { width: 100%; display: block; }
     .post-type-vertical .post-image { max-height: 500px; width: auto; margin: 0 auto; }
     .post-type-wide .post-image-container { max-height: 450px; }
-
-    /* --- BOTONES DE ACCIÓN DE LUJO (NUEVO) --- */
+    
+    /* --- BOTONES DE ACCIÓN DE LUJO (ACTUALIZADO) --- */
     .post-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--c-glass-border); padding-top: 16px; margin-top: auto; }
     .post-actions-main { display: flex; gap: 8px; }
     .action-button {
-        position: relative;
-        display: flex; align-items: center; justify-content: center;
-        width: 40px; height: 40px;
-        background: transparent; border: none;
-        color: var(--c-text-secondary);
-        cursor: pointer;
-        transition: color var(--transition-fast) ease;
+        position: relative; display: flex; align-items: center; justify-content: center;
+        width: 44px; height: 44px; background: transparent; border: none;
+        color: var(--c-text-secondary); cursor: pointer; transition: color var(--transition-fast) ease;
     }
-    .action-button svg {
-        width: 22px; height: 22px;
-        stroke: currentColor; stroke-width: 2;
-        transition: transform 0.3s ease;
-        z-index: 2;
-    }
-    .action-button::before, .action-button::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        border-radius: 50%;
-        transition: all 0.4s ease;
-    }
-    .action-button::before { /* Capa de fondo */
-        background: hsla(0, 0%, 100%, 0.1);
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    .action-button::after { /* Capa de brillo */
-        background: radial-gradient(circle, hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.5) 0%, transparent 70%);
-        opacity: 0;
-        transform: scale(0.5);
-        filter: blur(8px);
-    }
-    .action-button:hover { color: var(--c-accent); }
+    .action-button svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; transition: transform 0.3s ease; z-index: 2; }
+    .action-button::before, .action-button::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; transition: all 0.4s ease; }
+    .action-button::before { background: hsla(0, 0%, 100%, 0.1); opacity: 0; transform: scale(0.8); }
+    .action-button::after { background: radial-gradient(circle, hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.5) 0%, transparent 70%); opacity: 0; transform: scale(0.5); filter: blur(8px); }
+    .action-button:hover { color: var(--c-text); }
     .action-button:hover svg { transform: scale(1.1); }
     .action-button:hover::before { opacity: 1; transform: scale(1); }
     .action-button:hover::after { opacity: 1; transform: scale(1.2); }
-    .like-button.liked svg { stroke: var(--c-accent); fill: var(--c-accent); }
+    .action-button.active { color: var(--c-accent); }
+    .action-button.active svg { stroke: var(--c-accent); fill: var(--c-accent); }
 
-    /* --- TENDENCIAS Y TEXTO CINÉTICO (Estilos Restaurados) --- */
+    /* --- SECCIÓN DE COMENTARIOS (NUEVO) --- */
+    .post-comments-section {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out;
+    }
+    .post-comments-section.open {
+        max-height: 500px; /* Altura máxima para la animación */
+        margin-top: 16px;
+    }
+    .comment { display: flex; gap: 12px; margin-bottom: 12px; }
+    .comment-avatar { width: 32px; height: 32px; border-radius: 50%; }
+    .comment-body { background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: var(--radius-md); width: 100%; }
+    .comment-user { font-weight: 600; font-size: 0.9rem; }
+    .comment-text { font-size: 0.9rem; color: var(--c-text-secondary); }
+
+    /* --- TENDENCIAS Y RESPONSIVE (Estable) --- */
     .trends-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; }
     .trends-container h3 { margin-bottom: 16px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
     .trends-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; }
@@ -82,8 +88,6 @@
     .trends-list a:hover .char { animation: kinetic-scramble 0.8s ease-out forwards; }
     .char { display: inline-block; }
     @keyframes kinetic-scramble { 0%{transform:translate(0,0)} 50%{transform:translate(var(--dx),var(--dy)) rotate(var(--r))} 100%{transform:translate(0,0)} }
-
-    /* --- RESPONSIVE --- */
     @media (max-width: 1024px) { .home-layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
     @media (max-width: 768px) { .feed-container { column-count: 1; } }
 </style>
@@ -109,16 +113,31 @@
                         <button class="action-button like-button" title="Me gusta">
                             <svg fill="none" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                         </button>
-                        <button class="action-button" title="Comentar">
+                        <button class="action-button comment-button" title="Comentar">
                             <svg fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10z"></path></svg>
                         </button>
                     </div>
                     <div class="post-actions-secondary">
-                        <button class="action-button" title="Guardar">
+                        <button class="action-button save-button" title="Guardar">
                             <svg fill="none" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                         </button>
                     </div>
                 </footer>
+                <section class="post-comments-section">
+                    <?php if (!empty($post['comments'])): ?>
+                        <?php foreach ($post['comments'] as $comment): ?>
+                            <div class="comment">
+                                <img src="https://randomuser.me/api/portraits/thumb/men/75.jpg" alt="Avatar" class="comment-avatar">
+                                <div class="comment-body">
+                                    <div class="comment-user"><?php echo htmlspecialchars($comment['user']); ?></div>
+                                    <p class="comment-text"><?php echo htmlspecialchars($comment['text']); ?></p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p style="text-align: center; color: var(--c-text-secondary); font-size: 0.9rem;">No hay comentarios todavía. ¡Sé el primero!</p>
+                    <?php endif; ?>
+                </section>
             </article>
         <?php endforeach; ?>
     </div>

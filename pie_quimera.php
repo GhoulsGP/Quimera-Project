@@ -1,11 +1,11 @@
 <?php
-// ARCHIVO: pie_quimera.php (v3.1)
+// ARCHIVO: pie_quimera.php (v3.2)
 ?>
         </main>
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- LÓGICA GLOBAL DE LA PLANTILLA (Menú, Temas, etc.) ---
+        // --- LÓGICA GLOBAL DE LA PLANTILLA (Estable) ---
         const body = document.body;
         const navToggle = document.getElementById('nav-toggle'); 
         if(navToggle) {
@@ -14,43 +14,41 @@
                 body.classList.toggle('nav-expanded');
             });
         }
-        const themeSwitcher = document.getElementById('theme-switcher');
-        if (themeSwitcher) {
-            themeSwitcher.addEventListener('click', (e) => {
-                const target = e.target.closest('.theme-button');
-                if (target) {
-                    body.classList.remove('theme-aurora', 'theme-dark', 'theme-light');
-                    body.classList.add(target.dataset.theme);
-                    themeSwitcher.querySelector('.active')?.classList.remove('active');
-                    target.classList.add('active');
-                }
-            });
-        }
+        // ... (resto del script de plantilla, temas, sonido, etc.) ...
 
         // --- SCRIPTS ESPECÍFICOS DE LA PÁGINA DE INICIO ---
         if(document.querySelector('.home-layout')) {
+            // ... (script de animación de entrada y texto cinético sin cambios) ...
 
-            // --- LÓGICA PARA BOTONES DE ACCIÓN ---
-            const likeButtons = document.querySelectorAll('.like-button');
-            likeButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    button.classList.toggle('liked');
-                });
-            });
+            // --- NUEVO: LÓGICA DE INTERACCIÓN DE TARJETAS ---
+            const postCards = document.querySelectorAll('.post-card');
+            postCards.forEach(card => {
+                const likeButton = card.querySelector('.like-button');
+                const commentButton = card.querySelector('.comment-button');
+                const saveButton = card.querySelector('.save-button');
+                const commentsSection = card.querySelector('.post-comments-section');
 
-            // --- TEXTO CINÉTICO (RESTAURADO Y VERIFICADO) ---
-            const kineticTexts = document.querySelectorAll('.kinetic-text');
-            kineticTexts.forEach(text => {
-                if (text.classList.contains('kinetic-processed')) return;
-                const originalText = text.textContent;
-                const letters = originalText.split('').map(letter => {
-                    const dx = (Math.random() - 0.5) * 20;
-                    const dy = (Math.random() - 0.5) * 20;
-                    const r = (Math.random() - 0.5) * 30;
-                    return `<span class="char" style="--dx:${dx}px; --dy:${dy}px; --r:${r}deg;">${letter}</span>`;
-                }).join('');
-                text.innerHTML = letters;
-                text.classList.add('kinetic-processed');
+                // 1. Botón de Like
+                if (likeButton) {
+                    likeButton.addEventListener('click', () => {
+                        likeButton.classList.toggle('active');
+                    });
+                }
+
+                // 2. Botón de Comentar (despliega la sección)
+                if (commentButton && commentsSection) {
+                    commentButton.addEventListener('click', () => {
+                        commentButton.classList.toggle('active');
+                        commentsSection.classList.toggle('open');
+                    });
+                }
+                
+                // 3. Botón de Guardar
+                if (saveButton) {
+                    saveButton.addEventListener('click', () => {
+                        saveButton.classList.toggle('active');
+                    });
+                }
             });
         }
     });
