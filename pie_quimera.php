@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v6.0 - Definitiva)
+// ARCHIVO: pie_quimera.php (v7.0 - Arquitectura de Navegación Definitiva)
 ?>
         </main>
     </div>
@@ -7,14 +7,14 @@
     document.addEventListener('DOMContentLoaded', () => {
         const body = document.body;
 
-        // --- LÓGICA GLOBAL DE LA PLANTILLA (VERIFICADA) ---
-        const navToggle = document.getElementById('nav-toggle'); 
-        if(navToggle) {
-            navToggle.addEventListener('click', (e) => {
+        // --- LÓGICA GLOBAL DE LA PLANTILLA (VERIFICADA Y ESCALADA) ---
+        const navToggles = document.querySelectorAll('[data-action="toggle-nav"]');
+        navToggles.forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
                 e.preventDefault();
                 body.classList.toggle('nav-expanded');
             });
-        }
+        });
         
         const themeSwitcher = document.getElementById('theme-switcher');
         if (themeSwitcher) {

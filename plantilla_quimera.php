@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v6.5 - Corrección Final de Overflow)
+// ARCHIVO: plantilla_quimera.php (v7.0 - Arquitectura de Navegación Definitiva)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -39,6 +39,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { font-family: var(--font-main); background-color: var(--c-bg); color: var(--c-text); transition: background-color var(--transition-medium) ease, color var(--transition-medium) ease; overflow-x: hidden; }
+        .mobile-toggle { display: none; }
         #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
         #aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; transition: opacity var(--transition-medium) ease; opacity: var(--aurora-opacity); }
         .aurora-blob { position: absolute; border-radius: 50%; filter: blur(150px); will-change: transform; transition: background 1s ease; }
@@ -67,7 +68,7 @@
         body.nav-expanded .logo-icon { display: none; }
         #nav-footer { margin-top: auto; width: 100%; display: flex; flex-direction: column; align-items: center; }
         body.nav-expanded #nav-footer { align-items: stretch; }
-        #nav-toggle { background: none; border: none; cursor: pointer; }
+        .desktop-toggle { background: none; border: none; cursor: pointer; }
         #theme-switcher { display: flex; flex-direction: column; align-items: center; gap: 12px; height: auto; padding: 12px 0; }
         body.nav-expanded #theme-switcher { align-items: flex-start; padding: 12px 32px; }
         .theme-button { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid var(--c-text-tertiary); transition: all var(--transition-fast); flex-shrink: 0; }
@@ -81,17 +82,62 @@
             html {
                 font-size: 14px;
             }
-            :root {
-                --nav-width-collapsed: 60px; /* MODIFICACIÓN CLAVE */
+            .desktop-toggle {
+                display: none;
+            }
+            .mobile-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                width: 50px;
+                height: 50px;
+                z-index: 2001;
+                background: var(--c-glass-bg);
+                backdrop-filter: blur(8px);
+                border: 1px solid var(--c-glass-border);
+                border-radius: 50%;
+                color: var(--c-text);
+                text-decoration: none;
+            }
+            .mobile-toggle svg {
+                width: 24px;
+                height: 24px;
+                stroke: currentColor;
             }
             main.content-area {
-                padding: 14px;
-                padding-left: 90px; /* MODIFICACIÓN CLAVE: 60px (nav) + 16px (nav-offset) + 14px (gap) */
+                padding: 16px;
+                padding-left: 16px;
+                transition: filter var(--transition-medium) ease;
+            }
+            body.nav-expanded main.content-area {
+                filter: brightness(0.6);
+                pointer-events: none;
+            }
+            #main-nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                border-radius: 0;
+                transform: translateX(-100%);
+                transition: transform var(--transition-medium) ease, width var(--transition-medium) ease;
+                z-index: 2000;
+                border-right: 1px solid var(--c-glass-border);
+                box-shadow: 5px 0 25px rgba(0,0,0,0.2);
+            }
+            body.nav-expanded #main-nav {
+                transform: translateX(0);
             }
         }
     </style>
 </head>
 <body class="theme-aurora">
+    <a href="#" class="mobile-toggle" data-action="toggle-nav" title="Abrir Menú">
+        <svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+    </a>
     <canvas id="particle-canvas"></canvas>
     <div id="aurora-background">
         <div class="aurora-blob"></div>
@@ -110,7 +156,7 @@
                 <a href="/perfil.php" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><path d="M12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg><span class="nav-link-text">Perfil</span></a>
                 <a href="#" id="sound-toggle" class="nav-link" title="Activar/Desactivar Sonido"><svg id="sound-on-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 010 7.07"></path></svg><svg id="sound-off-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display: none;"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M23 9l-6 6"></path><path d="M17 9l6 6"></path></svg><span class="nav-link-text">Sonido</span></a>
                 <div id="theme-switcher"><button class="theme-button active" id="btn-aurora" data-theme="theme-aurora" title="Tema Aurora"></button><button class="theme-button" id="btn-dark" data-theme="theme-dark" title="Tema Oscuro"></button><button class="theme-button" id="btn-light" data-theme="theme-light" title="Tema Claro"></button></div>
-                <a href="#" id="nav-toggle" class="nav-link" title="Expandir/Colapsar Menú"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><span class="nav-link-text">Menú</span></a>
+                <a href="#" data-action="toggle-nav" class="nav-link desktop-toggle" title="Expandir/Colapsar Menú"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><span class="nav-link-text">Menú</span></a>
             </div>
         </nav>
         <main class="content-area">
