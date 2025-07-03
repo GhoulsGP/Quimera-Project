@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v2.3 - Solución CSS Columns)
+// ARCHIVO: pie_quimera.php (v3.1)
 ?>
         </main>
     </div>
@@ -14,14 +14,31 @@
                 body.classList.toggle('nav-expanded');
             });
         }
-        // ... (resto del script de la plantilla que es estable y correcto) ...
+        const themeSwitcher = document.getElementById('theme-switcher');
+        if (themeSwitcher) {
+            themeSwitcher.addEventListener('click', (e) => {
+                const target = e.target.closest('.theme-button');
+                if (target) {
+                    body.classList.remove('theme-aurora', 'theme-dark', 'theme-light');
+                    body.classList.add(target.dataset.theme);
+                    themeSwitcher.querySelector('.active')?.classList.remove('active');
+                    target.classList.add('active');
+                }
+            });
+        }
 
         // --- SCRIPTS ESPECÍFICOS DE LA PÁGINA DE INICIO ---
         if(document.querySelector('.home-layout')) {
 
-            // EL SCRIPT DE MASONRY HA SIDO ELIMINADO. LA MAQUETACIÓN AHORA SE CONTROLA 100% CON CSS.
+            // --- LÓGICA PARA BOTONES DE ACCIÓN ---
+            const likeButtons = document.querySelectorAll('.like-button');
+            likeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('liked');
+                });
+            });
 
-            // --- RESTAURADO Y VERIFICADO: SCRIPT DE TEXTO CINÉTICO ---
+            // --- TEXTO CINÉTICO (RESTAURADO Y VERIFICADO) ---
             const kineticTexts = document.querySelectorAll('.kinetic-text');
             kineticTexts.forEach(text => {
                 if (text.classList.contains('kinetic-processed')) return;
