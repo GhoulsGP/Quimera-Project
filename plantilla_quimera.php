@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v7.3 - Centrado de Búsqueda)
+// ARCHIVO: plantilla_quimera.php (v7.8 - Alineación de Precisión del Indicador)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -96,6 +96,66 @@
         .result-name { font-weight: 600; color: var(--c-text); }
         .result-handle { color: var(--c-text-secondary); font-size: 0.9em; }
 
+        /* --- ESTILOS NOTIFICACIONES --- */
+        #notifications-trigger { position: relative; }
+        #notifications-trigger.has-new .pulse-indicator { display: block; }
+        
+        /* --- INICIO DE MODIFICACIÓN QUIMERA-T3 --- */
+        .pulse-indicator {
+            display: none;
+            position: absolute;
+            /* Coordenadas para el estado COLAPSADO (por defecto) */
+            top: 15px;
+            left: calc(50% + 10px); /* Posicionamiento robusto relativo al centro */
+            width: 8px;
+            height: 8px;
+            background-color: var(--c-accent);
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.5);
+            animation: pulse-animation 2s infinite;
+            transition: left var(--transition-medium) ease, top var(--transition-medium) ease;
+        }
+        /* Coordenadas específicas para el estado EXPANDIDO */
+        body.nav-expanded .pulse-indicator {
+            left: 55px;
+        }
+        /* --- FIN DE MODIFICACIÓN QUIMERA-T3 --- */
+
+        @keyframes pulse-animation { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0); } }
+        
+        .notifications-popover {
+            position: absolute;
+            top: 0;
+            left: calc(var(--nav-width-collapsed) + 12px);
+            width: 380px;
+            backdrop-filter: blur(var(--blur-heavy));
+            background: hsla(215, 25%, 15%, 0.9);
+            border: 1px solid var(--c-glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 16px 40px hsla(0, 0%, 0%, 0.3);
+            z-index: 990;
+            opacity: 0;
+            transform-origin: left center;
+            transform: scale(0.95);
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+        body.nav-expanded .notifications-popover { left: calc(var(--nav-width) + 12px); }
+        .notifications-popover.open { opacity: 1; transform: scale(1); pointer-events: auto; }
+        .popover-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--c-glass-border); }
+        .popover-header h3 { font-size: 1rem; font-weight: 600; }
+        .popover-header a { font-size: 0.85rem; color: var(--c-accent); text-decoration: none; font-weight: 500; }
+        .popover-content { list-style: none; padding: 8px; margin: 0; max-height: 400px; overflow-y: auto; }
+        .notification-item { display: flex; gap: 12px; padding: 12px; border-radius: var(--radius-md); }
+        .notification-item:not(:last-child) { border-bottom: 1px solid var(--c-glass-border); }
+        .notification-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .notification-content { flex-grow: 1; font-size: 0.9rem; color: var(--c-text-secondary); line-height: 1.5; }
+        .notification-content b { color: var(--c-text); font-weight: 600; }
+        .notification-content .post-quote { display: block; border-left: 3px solid var(--c-accent); padding-left: 12px; margin-top: 8px; opacity: 0.8; }
+        .notification-footer { display: flex; gap: 12px; margin-top: 8px; }
+        .inline-action-button { background: hsla(var(--c-accent-h), var(--c-accent-s), 100%, 0.1); border: none; color: var(--c-text); padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: background-color 0.2s ease; }
+        .inline-action-button:hover { background: hsla(var(--c-accent-h), var(--c-accent-s), 100%, 0.2); }
+
         @media (max-width: 768px) {
             html { font-size: 14px; }
             .desktop-toggle { display: none; }
@@ -105,6 +165,7 @@
             body.nav-expanded main.content-area { filter: brightness(0.6); pointer-events: none; }
             #main-nav { position: fixed; top: 0; left: 0; height: 100vh; border-radius: 0; transform: translateX(-100%); transition: transform var(--transition-medium) ease, width var(--transition-medium) ease; z-index: 2000; border-right: 1px solid var(--c-glass-border); box-shadow: 5px 0 25px rgba(0,0,0,0.2); }
             body.nav-expanded #main-nav { transform: translateX(0); }
+            .notifications-popover { display: none; } /* Ocultar en móvil por ahora */
         }
     </style>
 </head>
@@ -121,9 +182,9 @@
         <nav id="main-nav">
             <div id="nav-header"><a href="/inicio.php" id="nav-logo"><span class="logo-full">Quimera</span><span class="logo-icon">Q</span></a></div>
             <ul>
-                <li><a href="/inicio.php" class="nav-link active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path></svg><span class="nav-link-text">Inicio</span></a></li>
+                <li><a href="/inicio.php" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path></svg><span class="nav-link-text">Inicio</span></a></li>
                 <li><a href="#" class="nav-link" id="search-trigger"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 17.25a6.25 6.25 0 110-12.5 6.25 6.25 0 010 12.5z"></path><path d="M16 16l4.5 4.5"></path></svg><span class="nav-link-text">Buscar</span></a></li>
-                <li><a href="#" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg><span class="nav-link-text">Notificaciones</span></a></li>
+                <li><a href="#" class="nav-link" id="notifications-trigger"><span class="pulse-indicator"></span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg><span class="nav-link-text">Notificaciones</span></a></li>
                 <li><a href="#" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h10a2 2 0 012 2v10z"></path></svg><span class="nav-link-text">Mensajes</span></a></li>
             </ul>
             <div id="nav-footer">
@@ -131,6 +192,14 @@
                 <a href="#" id="sound-toggle" class="nav-link" title="Activar/Desactivar Sonido"><svg id="sound-on-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 010 7.07"></path></svg><svg id="sound-off-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display: none;"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M23 9l-6 6"></path><path d="M17 9l6 6"></path></svg><span class="nav-link-text">Sonido</span></a>
                 <div id="theme-switcher"><button class="theme-button active" id="btn-aurora" data-theme="theme-aurora" title="Tema Aurora"></button><button class="theme-button" id="btn-dark" data-theme="theme-dark" title="Tema Oscuro"></button><button class="theme-button" id="btn-light" data-theme="theme-light" title="Tema Claro"></button></div>
                 <a href="#" data-action="toggle-nav" class="nav-link desktop-toggle" title="Expandir/Colapsar Menú"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><span class="nav-link-text">Menú</span></a>
+            </div>
+            <div class="notifications-popover" id="notifications-popover">
+                <div class="popover-header">
+                    <h3>Notificaciones</h3>
+                    <a href="#">Ver todas</a>
+                </div>
+                <ul class="popover-content" id="notifications-list">
+                </ul>
             </div>
         </nav>
         <main class="content-area">
