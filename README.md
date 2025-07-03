@@ -24,7 +24,10 @@ After logging in, youâ€™ll see the main page. This is where everything happensâ€
 ![image](https://github.com/user-attachments/assets/23238dbb-ff77-41af-a090-0bc083aaabae)
 
 
----
+--- 
+
+<img width="1280" alt="image" src="https://github.com/user-attachments/assets/7b8b66b9-cc6b-4689-aaac-9cda666e4991" />
+
 
 ## Technologies Used
 - **PHP:**  Handles the backend.
