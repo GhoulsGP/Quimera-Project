@@ -1,5 +1,5 @@
 <?php 
-    // ARCHIVO: inicio.php (v5.1 - Corrección Definitiva de Layout y Estilos)
+    // ARCHIVO: inicio.php (v5.1 - Corrección Definitiva)
 
     include 'plantilla_quimera.php';
     
@@ -14,44 +14,12 @@
 ?>
 
 <style>
-    /* --- ESTRUCTURA PRINCIPAL Y GRID --- */
-    .home-layout {
-        display: grid;
-        grid-template-columns: 1fr 300px;
-        gap: 24px;
-        align-items: flex-start;
-    }
-    
-    .feed-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-    }
-
-    .feed-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-        align-items: flex-start;
-    }
-
-    .feed-grid-col {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-    }
-    
+    .home-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: flex-start; }
+    .feed-wrapper { display: flex; flex-direction: column; gap: 24px; }
+    .feed-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: flex-start; }
+    .feed-grid-col { display: flex; flex-direction: column; gap: 24px; }
     .sidebar { position: sticky; top: 16px; }
-
-    /* --- ESTILOS DE TARJETA --- */
-    .post-card {
-        width: 100%;
-        display: flex; flex-direction: column; gap: 16px;
-        background: var(--c-glass-bg);
-        border: 1px solid var(--c-glass-border);
-        border-radius: var(--radius-lg); padding: 24px;
-    }
-    
+    .post-card { width: 100%; display: flex; flex-direction: column; gap: 16px; background: var(--c-glass-bg); border: 1px solid var(--c-glass-border); border-radius: var(--radius-lg); padding: 24px; }
     .post-header { display: flex; align-items: center; gap: 12px; }
     .post-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
     .post-author-name { font-weight: 600; }
@@ -61,19 +29,21 @@
     .post-type-wide .post-image-container { max-height: 450px; aspect-ratio: 16 / 9; object-fit: cover; }
     .post-type-vertical .post-image-container { max-height: 500px; aspect-ratio: 4 / 5; object-fit: cover; }
 
-    /* --- BOTONES DE ACCIÓN (ESTABLES Y RESPONSIVOS) --- */
+    /* --- BOTONES DE ACCIÓN DE LUJO (RESTAURADOS Y CORREGIDOS) --- */
     .post-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--c-glass-border); padding-top: 16px; margin-top: auto; }
     .post-actions-main { display: flex; gap: 8px; }
-    .action-button {
-        position: relative; display: flex; align-items: center; justify-content: center;
-        width: 44px; height: 44px; background: transparent; border: none;
-        color: var(--c-text-secondary); cursor: pointer; transition: color var(--transition-fast) ease;
-    }
+    .action-button { position: relative; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: transparent; border: none; color: var(--c-text-secondary); cursor: pointer; transition: color var(--transition-fast) ease; }
     .action-button svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; fill: none; transition: transform 0.3s ease; z-index: 2; }
+    .action-button::before, .action-button::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; transition: all 0.4s ease; }
+    .action-button::before { background: hsla(0, 0%, 100%, 0.1); opacity: 0; transform: scale(0.8); }
+    .action-button::after { background: radial-gradient(circle, hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.5) 0%, transparent 70%); opacity: 0; transform: scale(0.5); filter: blur(8px); }
+    .action-button:hover { color: var(--c-text); }
+    .action-button:hover svg { transform: scale(1.1); }
+    .action-button:hover::before { opacity: 1; transform: scale(1); }
+    .action-button:hover::after { opacity: 1; transform: scale(1.2); }
     .action-button.active { color: var(--c-accent); }
     .action-button.active svg { fill: var(--c-accent); }
-
-    /* --- TENDENCIAS Y TEXTO CINÉTICO (ESTABLES) --- */
+    
     .trends-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; }
     .trends-container h3 { margin-bottom: 16px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
     .trends-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; }
@@ -82,26 +52,17 @@
     .char { display: inline-block; }
     @keyframes kinetic-scramble { 0%{transform:translate(0,0)} 50%{transform:translate(var(--dx),var(--dy)) rotate(var(--r))} 100%{transform:translate(0,0)} }
 
-    /* --- RESPONSIVE --- */
-    @media (max-width: 1024px) {
-        .home-layout { grid-template-columns: 1fr; }
-        .sidebar { display: none; }
-    }
-    @media (max-width: 768px) {
-        .feed-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 1024px) { .home-layout { grid-template-columns: 1fr; } .sidebar { display: none; } }
+    @media (max-width: 768px) { .feed-grid { grid-template-columns: 1fr; } }
 </style>
 
 <div class="home-layout">
     <div class="feed-wrapper">
         <div class="feed-grid">
-            <div class="feed-grid-col">
-                </div>
-            <div class="feed-grid-col">
-                </div>
+            <div class="feed-grid-col"></div>
+            <div class="feed-grid-col"></div>
         </div>
     </div>
-
     <aside class="sidebar">
         <div class="trends-container">
             <h3>Tendencias</h3>

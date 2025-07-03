@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v5.1 - Corrección Definitiva)
+// ARCHIVO: plantilla_quimera.php (v5.1 - Definitiva)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -61,10 +61,6 @@
         body.nav-expanded .nav-link-text { position: static; opacity: 1; transform: translateX(0); pointer-events: auto; margin-left: 20px; }
         .nav-link.active, .nav-link:hover { color: var(--c-text); }
         .nav-link.active svg, .nav-link:hover svg { stroke: var(--c-accent); }
-        .nav-link::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 0%; background-color: var(--c-accent); border-radius: 99px; transition: height var(--transition-medium) ease, background-color var(--transition-medium) ease; display: none; }
-        body.nav-expanded .nav-link::before { display: block; left: 10px; }
-        .nav-link.active::before { height: 60%; }
-        .nav-link:hover:not(.active)::before { height: 30%; }
         #nav-header { text-align: center; padding-bottom: 24px; width: 100%; }
         #nav-logo { font-weight: 800; font-size: 1.5rem; text-decoration: none; color: var(--c-text); }
         .logo-full { display: none; }
@@ -92,9 +88,7 @@
     </div>
     <div class="layout-wrapper">
         <nav id="main-nav">
-            <div id="nav-header">
-                <a href="/inicio.php" id="nav-logo"><span class="logo-full">Trendly</span><span class="logo-icon">T</span></a>
-            </div>
+            <div id="nav-header"><a href="/inicio.php" id="nav-logo"><span class="logo-full">Trendly</span><span class="logo-icon">T</span></a></div>
             <ul>
                 <li><a href="#" class="nav-link active"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path></svg><span class="nav-link-text">Inicio</span></a></li>
                 <li><a href="#" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 17.25a6.25 6.25 0 110-12.5 6.25 6.25 0 010 12.5z"></path><path d="M16 16l4.5 4.5"></path></svg><span class="nav-link-text">Explorar</span></a></li>
