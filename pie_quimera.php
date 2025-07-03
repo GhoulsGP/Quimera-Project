@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v8.3 - Restauración de Lógica de Notificaciones)
+// ARCHIVO: pie_quimera.php (v8.4 - Lógica de Interacción de Posts)
 ?>
         </main>
     </div>
@@ -117,117 +117,27 @@
         if (searchTrigger && searchPalette) {
             const searchBackdrop = searchPalette.querySelector('.search-backdrop');
             const searchInput = searchPalette.querySelector('#search-input-field');
-            const searchResultsList = searchPalette.querySelector('#search-results-list');
-            
             const openSearch = (e) => { e.preventDefault(); searchPalette.style.display = 'flex'; setTimeout(() => searchPalette.classList.add('open'), 10); searchInput.focus(); };
-            const closeSearch = () => { searchPalette.classList.remove('open'); setTimeout(() => { searchPalette.style.display = 'none'; searchInput.value = ''; if(searchResultsList) searchResultsList.innerHTML = ''; }, 200); };
-            
+            const closeSearch = () => { searchPalette.classList.remove('open'); setTimeout(() => { searchPalette.style.display = 'none'; searchInput.value = ''; }, 200); };
             searchTrigger.addEventListener('click', openSearch);
             searchBackdrop.addEventListener('click', closeSearch);
-            
-            const dummyUsers = [
-                { name: 'Elena Codes', handle: '@elenacodes', avatar: '9' },
-                { name: 'David UX', handle: '@davidux', avatar: '8' },
-                { name: 'Ana Design', handle: '@anadesign', avatar: '7' },
-                { name: 'Carlos Dev', handle: '@carlosdev', avatar: '6' },
-                { name: 'Marco Polo', handle: '@marcop', avatar: '3' },
-            ];
-
-            searchInput.addEventListener('input', () => {
-                if (!searchResultsList) return;
-                searchResultsList.innerHTML = '';
-                const query = searchInput.value.toLowerCase();
-                if (query.length === 0) return;
-                const filteredUsers = dummyUsers.filter(user => 
-                    user.name.toLowerCase().includes(query) || user.handle.toLowerCase().includes(query)
-                );
-                filteredUsers.forEach((user, index) => {
-                    const li = document.createElement('li');
-                    li.className = 'search-result-item';
-                    li.style.animationDelay = `${index * 0.05}s`;
-                    li.style.transform = `translateY(10px)`;
-                    li.innerHTML = `
-                        <img src="https://randomuser.me/api/portraits/lego/${user.avatar}.jpg" alt="Avatar" class="result-avatar">
-                        <div class="result-info">
-                            <span class="result-name">${user.name}</span>
-                            <span class="result-handle">${user.handle}</span>
-                        </div>
-                    `;
-                    searchResultsList.appendChild(li);
-                });
-            });
         }
 
-        // --- LÓGICA DE NOTIFICACIONES (RESTAURADA) ---
+        // --- LÓGICA DE NOTIFICACIONES ---
         const notificationsTrigger = document.getElementById('notifications-trigger');
         const notificationsPopover = document.getElementById('notifications-popover');
-        const mainNav = document.getElementById('main-nav');
-
-        if (notificationsTrigger && notificationsPopover && mainNav) {
-            const notificationsList = document.getElementById('notifications-list');
-            const dummyNotifications = [
-                { type: 'like', by: ['Elena Codes', 'David UX', 'Ana Design', 'Carlos Dev'], post: 'tu post "UX de Lujo"', count: 4, avatar: '9' },
-                { type: 'comment', by: 'Marco Polo', on: 'tu post "Arquitectura CSS"', text: '¡Excelente análisis de la arquitectura! Muy claro.', avatar: '3' },
-                { type: 'follow', by: 'Jane Dev', avatar: '4' }
-            ];
-
-            const renderNotifications = () => {
-                if(!notificationsList) return;
-                notificationsList.innerHTML = '';
-                dummyNotifications.forEach(n => {
-                    const li = document.createElement('li');
-                    li.className = 'notification-item';
-                    let contentHTML = '';
-                    if (n.type === 'like') {
-                        contentHTML = `
-                            <img src="https://randomuser.me/api/portraits/lego/${n.avatar}.jpg" alt="Avatar" class="notification-avatar">
-                            <div class="notification-content">
-                                <b>${n.by[0]}</b> y <b>${n.count - 1} personas más</b> han indicado que les gusta ${n.post}.
-                            </div>`;
-                    } else if (n.type === 'comment') {
-                        contentHTML = `
-                            <img src="https://randomuser.me/api/portraits/lego/${n.avatar}.jpg" alt="Avatar" class="notification-avatar">
-                            <div class="notification-content">
-                                <b>${n.by}</b> ha comentado en ${n.on}:
-                                <span class="post-quote">${n.text}</span>
-                                <div class="notification-footer">
-                                    <button class="inline-action-button">Responder</button>
-                                </div>
-                            </div>`;
-                    } else if (n.type === 'follow') {
-                        contentHTML = `
-                             <img src="https://randomuser.me/api/portraits/lego/${n.avatar}.jpg" alt="Avatar" class="notification-avatar">
-                            <div class="notification-content">
-                                <b>${n.by}</b> ha comenzado a seguirte.
-                            </div>`;
-                    }
-                    li.innerHTML = contentHTML;
-                    notificationsList.appendChild(li);
-                });
-            };
-
-            notificationsTrigger.addEventListener('click', (e) => {
+        if (notificationsTrigger && notificationsPopover) {
+             notificationsTrigger.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-
-                const triggerRect = notificationsTrigger.getBoundingClientRect();
-                const navRect = mainNav.getBoundingClientRect();
-                const topPosition = triggerRect.top - navRect.top;
-                notificationsPopover.style.top = `${topPosition}px`;
-                
-                const isOpen = notificationsPopover.classList.toggle('open');
-                if (isOpen) {
-                    renderNotifications();
-                }
-            });
-
-            document.addEventListener('click', (e) => {
+                notificationsPopover.classList.toggle('open');
+             });
+             document.addEventListener('click', (e) => {
                 if (!notificationsPopover.contains(e.target) && !notificationsTrigger.contains(e.target)) {
                     notificationsPopover.classList.remove('open');
                 }
             });
         }
-
 
         // --- LÓGICA DEL CENTRO DE MENSAJES ---
         const messagesTrigger = document.getElementById('messages-trigger');
@@ -242,22 +152,48 @@
                 messageCenter.classList.remove('open');
                 setTimeout(() => messageCenter.style.display = 'none', 400);
             };
-
             messagesTrigger.addEventListener('click', (e) => {
                 e.preventDefault();
                 openMessageCenter();
             });
-
             if (mcBackdrop) {
                 mcBackdrop.addEventListener('click', closeMessageCenter);
             }
-
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && messageCenter.classList.contains('open')) {
                     closeMessageCenter();
                 }
             });
         }
+
+        // --- LÓGICA DE INTERACCIÓN DE POSTS ---
+        const likeButtons = document.querySelectorAll('.like-button');
+        likeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                button.classList.toggle('active');
+            });
+        });
+
+        const saveButtons = document.querySelectorAll('.save-button');
+        saveButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                button.classList.toggle('active');
+            });
+        });
+
+        const commentButtons = document.querySelectorAll('.comment-button');
+        commentButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const postCard = button.closest('.post-card');
+                if (postCard) {
+                    const commentsSection = postCard.querySelector('.post-comments-section');
+                    if (commentsSection) {
+                        commentsSection.classList.toggle('open');
+                    }
+                }
+            });
+        });
+
     });
     </script>
 </body>

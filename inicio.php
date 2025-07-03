@@ -1,5 +1,5 @@
 <?php 
-    // ARCHIVO: inicio.php (v7.0 - Layout Móvil Unificado)
+    // ARCHIVO: inicio.php (v7.1 - Estilo de Botón Guardar Activo)
 
     include 'plantilla_quimera.php';
     
@@ -49,6 +49,11 @@
     .action-button:hover::after { opacity: 1; transform: scale(1.2); }
     .action-button.active { color: var(--c-accent); }
     .action-button.active svg { fill: var(--c-accent); }
+    /* INICIO MODIFICACIÓN: Estilo para botón Guardar activo */
+    .action-button.save-button.active svg {
+        fill: var(--c-accent);
+    }
+    /* FIN MODIFICACIÓN */
     .post-comments-section { max-height: 0; overflow: hidden; transition: all .5s ease-in-out; opacity: 0; border-top: 1px solid var(--c-glass-border); }
     .post-comments-section.open { max-height: 500px; margin-top: 16px; padding-top: 16px; padding-bottom: 16px; opacity: 1; }
     .comments-wrapper { display: flex; flex-direction: column; gap: 16px; height: 100%; }
@@ -101,7 +106,7 @@
             grid-template-columns: 1fr;
         }
         .sidebar {
-            position: static; /* Para que fluya normalmente en el layout de una columna */
+            position: static;
             margin-top: 24px;
         }
         .feed-container { 
