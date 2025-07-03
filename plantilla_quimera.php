@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v4.3 - Estable)
+// ARCHIVO: plantilla_quimera.php (v5.1 - Corrección Definitiva)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -25,7 +25,7 @@
             --c-bg: #0D1117; --c-text: #E6EDF3; --c-text-secondary: #8B949E; --c-text-tertiary: #484F58;
             --c-accent: hsl(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l)); 
             --c-accent-text: #FFFFFF; --c-glass-bg: hsla(215, 25%, 15%, 0.5);
-            --c-glass-border: hsla(215, 25%, 100%, 0.1);
+            --c-glass-border: hsla(215, 25%, 100%, 0.1); --c-glass-border-hover: hsla(var(--c-accent-h), 80%, 70%, 0.6);
             --aurora-opacity: 1;
         }
         body.theme-dark {
@@ -61,6 +61,10 @@
         body.nav-expanded .nav-link-text { position: static; opacity: 1; transform: translateX(0); pointer-events: auto; margin-left: 20px; }
         .nav-link.active, .nav-link:hover { color: var(--c-text); }
         .nav-link.active svg, .nav-link:hover svg { stroke: var(--c-accent); }
+        .nav-link::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 0%; background-color: var(--c-accent); border-radius: 99px; transition: height var(--transition-medium) ease, background-color var(--transition-medium) ease; display: none; }
+        body.nav-expanded .nav-link::before { display: block; left: 10px; }
+        .nav-link.active::before { height: 60%; }
+        .nav-link:hover:not(.active)::before { height: 30%; }
         #nav-header { text-align: center; padding-bottom: 24px; width: 100%; }
         #nav-logo { font-weight: 800; font-size: 1.5rem; text-decoration: none; color: var(--c-text); }
         .logo-full { display: none; }
@@ -73,6 +77,8 @@
         #theme-switcher { display: flex; justify-content: center; gap: 8px; height: 56px; align-items: center; }
         body.nav-expanded #theme-switcher { justify-content: flex-start; padding: 0 32px; }
         .theme-button { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid var(--c-text-tertiary); transition: all var(--transition-fast); }
+        .theme-button:hover { transform: scale(1.15); }
+        .theme-button.active { border-color: var(--c-accent); }
         #btn-aurora { background: linear-gradient(45deg, hsl(210, 80%, 50%), hsl(260, 80%, 60%)); }
         #btn-dark { background: #000; }
         #btn-light { background: #fff; }

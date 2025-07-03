@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v4.3 - Funcionalidad Completa)
+// ARCHIVO: pie_quimera.php (v5.0 - Maquetación Definitiva)
 ?>
         </main>
     </div>
@@ -22,67 +22,53 @@
                 const target = e.target.closest('.theme-button');
                 if (target) {
                     body.classList.remove('theme-aurora', 'theme-dark', 'theme-light');
-                    const theme = target.dataset.theme;
-                    body.classList.add(theme);
+                    body.classList.add(target.dataset.theme);
                     themeSwitcher.querySelector('.active')?.classList.remove('active');
                     target.classList.add('active');
-                    if (theme === 'theme-aurora') setGenerativeTheme();
                 }
-            });
-        }
-
-        let soundsEnabled = false;
-        const soundToggle = document.getElementById('sound-toggle');
-        const soundOnIcon = document.getElementById('sound-on-icon');
-        const soundOffIcon = document.getElementById('sound-off-icon');
-        function playSound(soundId) {
-            if (soundsEnabled) {
-                const audioElement = document.getElementById(soundId);
-                if(audioElement) {
-                    audioElement.currentTime = 0;
-                    audioElement.play().catch(e => console.error("Error al reproducir sonido:", e));
-                }
-            }
-        }
-        if (soundToggle) {
-            soundToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                soundsEnabled = !soundsEnabled;
-                soundOnIcon.style.display = soundsEnabled ? 'block' : 'none';
-                soundOffIcon.style.display = soundsEnabled ? 'none' : 'block';
-                playSound('audio-click');
             });
         }
         
-        function setGenerativeTheme() {
-            const hour = new Date().getHours();
-            let accentHue;
-            if (hour >= 5 && hour < 12) { accentHue = 190; }
-            else if (hour >= 12 && hour < 18) { accentHue = 260; }
-            else if (hour >= 18 && hour < 22) { accentHue = 30; }
-            else { accentHue = 220; }
-            document.documentElement.style.setProperty('--c-accent-h', accentHue);
-        }
-        if (body.classList.contains('theme-aurora')) {
-            setGenerativeTheme();
-        }
-
-        // --- SCRIPTS ESPECÍFICOS DE LA PÁGINA DE INICIO (VERIFICADOS) ---
+        // --- SCRIPTS ESPECÍFICOS DE LA PÁGINA DE INICIO ---
         if(document.querySelector('.home-layout')) {
+
+            // --- SOLUCIÓN MASONRY CON JAVASCRIPT ---
+            const feedGrid = document.querySelector('.feed-grid');
+            const postTemplates = document.getElementById('post-templates');
+            const gridColumns = feedGrid.querySelectorAll('.feed-grid-col');
+
+            function distributePosts() {
+                if (!feedGrid || !postTemplates || gridColumns.length === 0) return;
+
+                // En pantallas pequeñas, todo a una columna.
+                if (window.innerWidth <= 768) {
+                    gridColumns[1].innerHTML = ''; // Vaciar segunda columna por si acaso
+                    // Mover todos los posts a la primera columna si no están ya ahí
+                    if (gridColumns[0].children.length !== postTemplates.children.length) {
+                        gridColumns[0].innerHTML = '';
+                        Array.from(postTemplates.children).forEach(post => {
+                            gridColumns[0].appendChild(post.cloneNode(true));
+                        });
+                    }
+                    return;
+                }
+
+                // En escritorio, distribuir en 2 columnas
+                const columns = [gridColumns[0], gridColumns[1]];
+                columns.forEach(col => col.innerHTML = ''); // Limpiar columnas
+                const posts = Array.from(postTemplates.children);
+
+                posts.forEach((post, index) => {
+                    // Distribuir alternando entre la columna 0 y la 1
+                    columns[index % 2].appendChild(post.cloneNode(true));
+                });
+            }
+
+            // Esperar a que todo cargue para que las alturas sean correctas
+            window.addEventListener('load', distributePosts);
+            window.addEventListener('resize', distributePosts);
             
-            // Lógica de Interacción de Tarjetas (Like, Comentar, Guardar)
-            document.querySelectorAll('.post-card').forEach(card => {
-                const likeButton = card.querySelector('.like-button');
-                const commentButton = card.querySelector('.comment-button');
-                const saveButton = card.querySelector('.save-button');
-                const commentsSection = card.querySelector('.post-comments-section');
-
-                if (likeButton) { likeButton.addEventListener('click', () => { likeButton.classList.toggle('active'); }); }
-                if (commentButton && commentsSection) { commentButton.addEventListener('click', () => { commentsSection.classList.toggle('open'); }); }
-                if (saveButton) { saveButton.addEventListener('click', () => { saveButton.classList.toggle('active'); }); }
-            });
-
-            // Texto Cinético
+            // --- TEXTO CINÉTICO (VERIFICADO) ---
             const kineticTexts = document.querySelectorAll('.kinetic-text');
             kineticTexts.forEach(text => {
                 if (text.classList.contains('kinetic-processed')) return;
