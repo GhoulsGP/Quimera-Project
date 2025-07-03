@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v9.0 - FINAL, Sistema Estable)
+// ARCHIVO: pie_quimera.php (v10.0 - SISTEMA ESTABLE)
 ?>
         </main>
     </div>
@@ -111,7 +111,7 @@
             });
         }
         
-        // --- LÓGICA DE LA PALETA DE BÚSQUEDA ---
+        // --- LÓGICA DE LA PALETA DE BÚSQUEDA (COMPLETA Y RESTAURADA) ---
         const searchTrigger = document.getElementById('search-trigger');
         const searchPalette = document.getElementById('search-palette');
         if (searchTrigger && searchPalette) {
@@ -124,9 +124,41 @@
             
             searchTrigger.addEventListener('click', openSearch);
             searchBackdrop.addEventListener('click', closeSearch);
+
+            const dummyUsers = [
+                { name: 'Elena Codes', handle: '@elenacodes', avatar: '9' },
+                { name: 'David UX', handle: '@davidux', avatar: '8' },
+                { name: 'Ana Design', handle: '@anadesign', avatar: '7' },
+                { name: 'Carlos Dev', handle: '@carlosdev', avatar: '6' },
+                { name: 'Marco Polo', handle: '@marcop', avatar: '3' },
+            ];
+
+            searchInput.addEventListener('input', () => {
+                if (!searchResultsList) return;
+                searchResultsList.innerHTML = '';
+                const query = searchInput.value.toLowerCase();
+                if (query.length === 0) return;
+                const filteredUsers = dummyUsers.filter(user => 
+                    user.name.toLowerCase().includes(query) || user.handle.toLowerCase().includes(query)
+                );
+                filteredUsers.forEach((user, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'search-result-item';
+                    li.style.animationDelay = `${index * 0.05}s`;
+                    li.style.transform = `translateY(10px)`;
+                    li.innerHTML = `
+                        <img src="https://randomuser.me/api/portraits/lego/${user.avatar}.jpg" alt="Avatar" class="result-avatar">
+                        <div class="result-info">
+                            <span class="result-name">${user.name}</span>
+                            <span class="result-handle">${user.handle}</span>
+                        </div>
+                    `;
+                    searchResultsList.appendChild(li);
+                });
+            });
         }
 
-        // --- LÓGICA DE NOTIFICACIONES (COMPLETA Y RESTAURADA) ---
+        // --- LÓGICA DE NOTIFICACIONES ---
         const notificationsTrigger = document.getElementById('notifications-trigger');
         const notificationsPopover = document.getElementById('notifications-popover');
         const mainNav = document.getElementById('main-nav');
@@ -194,19 +226,13 @@
                 const saveButton = e.target.closest('.save-button');
                 const commentButton = e.target.closest('.comment-button');
 
-                if (likeButton) {
-                    likeButton.classList.toggle('active');
-                }
-                if (saveButton) {
-                    saveButton.classList.toggle('active');
-                }
+                if (likeButton) { likeButton.classList.toggle('active'); }
+                if (saveButton) { saveButton.classList.toggle('active'); }
                 if (commentButton) {
                     const postCard = commentButton.closest('.post-card');
                     if (postCard) {
                         const commentsSection = postCard.querySelector('.post-comments-section');
-                        if (commentsSection) {
-                            commentsSection.classList.toggle('open');
-                        }
+                        if (commentsSection) { commentsSection.classList.toggle('open'); }
                     }
                 }
             });
