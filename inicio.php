@@ -1,5 +1,5 @@
 <?php 
-    // ARCHIVO: inicio.php (v5.1 - Corrección Definitiva)
+    // ARCHIVO: inicio.php (v5.2 - Corrección Definitiva)
 
     include 'plantilla_quimera.php';
     
@@ -29,10 +29,14 @@
     .post-type-wide .post-image-container { max-height: 450px; aspect-ratio: 16 / 9; object-fit: cover; }
     .post-type-vertical .post-image-container { max-height: 500px; aspect-ratio: 4 / 5; object-fit: cover; }
 
-    /* --- BOTONES DE ACCIÓN DE LUJO (RESTAURADOS Y CORREGIDOS) --- */
+    /* --- BOTONES DE ACCIÓN (COMPLETO Y VERIFICADO) --- */
     .post-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--c-glass-border); padding-top: 16px; margin-top: auto; }
     .post-actions-main { display: flex; gap: 8px; }
-    .action-button { position: relative; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: transparent; border: none; color: var(--c-text-secondary); cursor: pointer; transition: color var(--transition-fast) ease; }
+    .action-button {
+        position: relative; display: flex; align-items: center; justify-content: center;
+        width: 44px; height: 44px; background: transparent; border: none;
+        color: var(--c-text-secondary); cursor: pointer; transition: color var(--transition-fast) ease;
+    }
     .action-button svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2; fill: none; transition: transform 0.3s ease; z-index: 2; }
     .action-button::before, .action-button::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; transition: all 0.4s ease; }
     .action-button::before { background: hsla(0, 0%, 100%, 0.1); opacity: 0; transform: scale(0.8); }
@@ -44,6 +48,20 @@
     .action-button.active { color: var(--c-accent); }
     .action-button.active svg { fill: var(--c-accent); }
     
+    .post-comments-section { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out, opacity 0.5s ease-in-out; opacity: 0; border-top: 1px solid var(--c-glass-border); }
+    .post-comments-section.open { max-height: 500px; margin-top: 16px; padding-top: 16px; opacity: 1; }
+    .comment { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+    .comment-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; }
+    .comment-body { background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: var(--radius-md); width: 100%; }
+    .comment-user { font-weight: 600; font-size: 0.9rem; }
+    .comment-text { font-size: 0.9rem; color: var(--c-text-secondary); word-break: break-word; }
+    .comment-form { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
+    .comment-input { flex-grow: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--c-glass-border); border-radius: 99px; padding: 10px 16px; color: var(--c-text); font-size: 0.9rem; outline: none; transition: border-color var(--transition-fast); }
+    .comment-input:focus { border-color: var(--c-accent); }
+    .comment-send-btn { background: var(--c-accent); border: none; border-radius: 50%; width: 40px; height: 40px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; }
+    .comment-send-btn:hover { transform: scale(1.1); }
+    .comment-send-btn svg { stroke: var(--c-accent-text); width: 18px; height: 18px; }
+
     .trends-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; }
     .trends-container h3 { margin-bottom: 16px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
     .trends-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; }
@@ -99,6 +117,24 @@
                     <button class="action-button save-button" title="Guardar"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></button>
                 </div>
             </footer>
+            <section class="post-comments-section">
+                <?php if (!empty($post['comments'])): ?>
+                    <?php foreach ($post['comments'] as $comment): ?>
+                        <div class="comment">
+                            <img src="https://randomuser.me/api/portraits/thumb/men/75.jpg" alt="Avatar" class="comment-avatar">
+                            <div class="comment-body">
+                                <div class="comment-user"><?php echo htmlspecialchars($comment['user']); ?></div>
+                                <p class="comment-text"><?php echo htmlspecialchars($comment['text']); ?></p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <form class="comment-form">
+                    <img src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Tu avatar" class="comment-avatar">
+                    <input type="text" class="comment-input" placeholder="Añade un comentario...">
+                    <button type="submit" class="comment-send-btn" title="Enviar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"></path><path d="M22 2L15 22l-4-9-9-4 21-5z"></path></svg></button>
+                </form>
+            </section>
         </article>
     <?php endforeach; ?>
 </div>

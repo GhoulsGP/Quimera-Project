@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v5.2 - Corrección de Event Listeners)
+// ARCHIVO: pie_quimera.php (v5.2 - Corrección de Eventos)
 ?>
         </main>
     </div>
@@ -36,10 +36,8 @@
             const postTemplates = document.getElementById('post-templates');
             const gridColumns = feedGrid.querySelectorAll('.feed-grid-col');
 
-            // --- FUNCIÓN PARA AÑADIR LOS EVENTOS A LAS TARJETAS ---
             function attachCardEventListeners() {
                 document.querySelectorAll('.feed-grid .post-card').forEach(card => {
-                    // Prevenir doble asignación de eventos
                     if (card.dataset.eventsAttached) return;
 
                     const likeButton = card.querySelector('.like-button');
@@ -69,26 +67,22 @@
                 });
             }
 
-            // --- FUNCIÓN PARA EL LAYOUT MASONRY ---
             function distributePosts() {
                 if (!feedGrid || !postTemplates || gridColumns.length === 0) return;
                 
                 const posts = Array.from(postTemplates.children);
-                columns = [gridColumns[0], gridColumns[1]];
+                const columns = [gridColumns[0], gridColumns[1]];
                 columns.forEach(col => col.innerHTML = '');
 
                 if (window.innerWidth <= 768) {
-                    // En móvil, todo a una columna
                     posts.forEach(post => {
                         columns[0].appendChild(post.cloneNode(true));
                     });
                 } else {
-                    // En escritorio, distribuir en 2 columnas
                     posts.forEach((post, index) => {
                         columns[index % 2].appendChild(post.cloneNode(true));
                     });
                 }
-                // IMPORTANTE: Asignar los eventos DESPUÉS de clonar y añadir los posts al DOM
                 attachCardEventListeners();
             }
 

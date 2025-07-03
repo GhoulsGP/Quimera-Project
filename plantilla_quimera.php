@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v5.1 - Definitiva)
+// ARCHIVO: plantilla_quimera.php (v5.2 - Definitiva)
 ?>
 <!DOCTYPE html>
 <html lang="es">
