@@ -1,41 +1,31 @@
 <?php 
-    // ARCHIVO: inicio.php (v3.2 - Comentarios Interactivos)
+    // ARCHIVO: inicio.php (v3.2 - Botones de Lujo y Funcionalidad Restaurada)
 
     include 'plantilla_quimera.php';
     
     // Datos de prueba con comentarios
     $posts = [
         [ 
-            'autor_nombre' => 'Elena Codes', 'type' => 'wide', 'contenido' => 'He añadido una sección de comentarios que se despliega con una animación suave. Mucho más elegante que ir a otra página.', 'imagen' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop',
+            'autor_nombre' => 'Elena Codes', 'type' => 'wide', 'contenido' => 'El nuevo hover de los botones es increíble. Se siente premium.', 'imagen' => 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop',
             'comments' => [
                 ['user' => 'Carlos Dev', 'text' => '¡Funciona de maravilla! La transición es muy fluida.'],
                 ['user' => 'Ana Design', 'text' => 'Me encanta cómo se integra con el diseño de la tarjeta.'],
             ]
         ],
         [ 
-            'autor_nombre' => 'Ana Design', 'type' => 'vertical', 'contenido' => 'Los nuevos botones de acción se sienten increíbles. El hover es de otro nivel.', 'imagen' => 'https://images.unsplash.com/photo-1511300636412-01634217b4e6?q=80&w=1887&auto=format&fit=crop',
+            'autor_nombre' => 'Ana Design', 'type' => 'vertical', 'contenido' => 'Todo vuelve a funcionar como debería. El texto cinético está de vuelta y los temas responden.', 'imagen' => 'https://images.unsplash.com/photo-1511300636412-01634217b4e6?q=80&w=1887&auto=format&fit=crop',
             'comments' => []
-        ],
-        [ 
-            'autor_nombre' => 'Carlos Dev', 'type' => 'normal', 'contenido' => 'Un post sin imagen para probar la funcionalidad de comentarios. Todo en su sitio.', 'imagen' => null,
-            'comments' => [
-                ['user' => 'David UX', 'text' => 'Perfecto.']
-            ]
         ],
     ];
     $tendencias = ['#QuimeraProject', '#InteractiveUI', '#UX', '#FutureWeb'];
 ?>
 
 <style>
-    /* --- ESTRUCTURA PRINCIPAL (Estable) --- */
     .home-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: flex-start; }
     .sidebar { position: sticky; top: 16px; }
     .feed-container { column-count: 2; column-gap: 24px; }
-    .post-card { margin-bottom: 24px; break-inside: avoid; width: 100%; }
+    .post-card { margin-bottom: 24px; break-inside: avoid; width: 100%; display: flex; flex-direction: column; gap: 16px; background: var(--c-glass-bg); border: 1px solid var(--c-glass-border); border-radius: var(--radius-lg); padding: 24px; }
     .post-card.post-type-wide { column-span: all; }
-
-    /* --- ESTILOS DE TARJETA (Estables) --- */
-    .post-card { display: flex; flex-direction: column; gap: 16px; background: var(--c-glass-bg); border: 1px solid var(--c-glass-border); border-radius: var(--radius-lg); padding: 24px; }
     .post-header { display: flex; align-items: center; gap: 12px; }
     .post-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
     .post-author-name { font-weight: 600; }
@@ -44,8 +34,8 @@
     .post-image { width: 100%; display: block; }
     .post-type-vertical .post-image { max-height: 500px; width: auto; margin: 0 auto; }
     .post-type-wide .post-image-container { max-height: 450px; }
-    
-    /* --- BOTONES DE ACCIÓN DE LUJO (ACTUALIZADO) --- */
+
+    /* --- BOTONES DE ACCIÓN DE LUJO --- */
     .post-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--c-glass-border); padding-top: 16px; margin-top: auto; }
     .post-actions-main { display: flex; gap: 8px; }
     .action-button {
@@ -64,16 +54,9 @@
     .action-button.active { color: var(--c-accent); }
     .action-button.active svg { stroke: var(--c-accent); fill: var(--c-accent); }
 
-    /* --- SECCIÓN DE COMENTARIOS (NUEVO) --- */
-    .post-comments-section {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out;
-    }
-    .post-comments-section.open {
-        max-height: 500px; /* Altura máxima para la animación */
-        margin-top: 16px;
-    }
+    /* --- SECCIÓN DE COMENTARIOS --- */
+    .post-comments-section { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out; }
+    .post-comments-section.open { max-height: 500px; margin-top: 16px; }
     .comment { display: flex; gap: 12px; margin-bottom: 12px; }
     .comment-avatar { width: 32px; height: 32px; border-radius: 50%; }
     .comment-body { background: rgba(0,0,0,0.15); padding: 8px 12px; border-radius: var(--radius-md); width: 100%; }
