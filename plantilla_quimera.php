@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v6.0 - Definitiva)
+// ARCHIVO: plantilla_quimera.php (v6.5 - Corrección Final de Overflow)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -47,7 +47,7 @@
         @keyframes move-blob-1 { to { transform: translate(15vw, 10vh) scale(1.3); } }
         @keyframes move-blob-2 { to { transform: translate(-10vw, -15vh) scale(0.8); } }
         .layout-wrapper { display: flex; }
-        main.content-area { width: 100%; padding: 32px; padding-left: calc(var(--nav-width-collapsed) + 32px); transition: padding-left var(--transition-medium) ease; }
+        main.content-area { width: 100%; min-width: 0; padding: 32px; padding-left: calc(var(--nav-width-collapsed) + 32px); transition: padding-left var(--transition-medium) ease; }
         body.nav-expanded main.content-area { padding-left: calc(var(--nav-width) + 32px); }
         #main-nav { position: fixed; top: 16px; left: 16px; height: calc(100vh - 32px); width: var(--nav-width-collapsed); background: var(--c-glass-bg); backdrop-filter: blur(var(--blur-heavy)); border: 1px solid var(--c-glass-border); border-radius: var(--radius-xl); padding: 24px 0; display: flex; flex-direction: column; align-items: center; z-index: 1000; transition: width var(--transition-medium) ease, background var(--transition-medium) ease; }
         body.nav-expanded #main-nav { width: var(--nav-width); }
@@ -68,9 +68,9 @@
         #nav-footer { margin-top: auto; width: 100%; display: flex; flex-direction: column; align-items: center; }
         body.nav-expanded #nav-footer { align-items: stretch; }
         #nav-toggle { background: none; border: none; cursor: pointer; }
-        #theme-switcher { display: flex; justify-content: center; gap: 8px; height: 56px; align-items: center; }
-        body.nav-expanded #theme-switcher { justify-content: flex-start; padding: 0 32px; }
-        .theme-button { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid var(--c-text-tertiary); transition: all var(--transition-fast); }
+        #theme-switcher { display: flex; flex-direction: column; align-items: center; gap: 12px; height: auto; padding: 12px 0; }
+        body.nav-expanded #theme-switcher { align-items: flex-start; padding: 12px 32px; }
+        .theme-button { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid var(--c-text-tertiary); transition: all var(--transition-fast); flex-shrink: 0; }
         .theme-button:hover { transform: scale(1.15); }
         .theme-button.active { border-color: var(--c-accent); }
         #btn-aurora { background: linear-gradient(45deg, hsl(210, 80%, 50%), hsl(260, 80%, 60%)); }
@@ -78,9 +78,15 @@
         #btn-light { background: #fff; }
 
         @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
+            :root {
+                --nav-width-collapsed: 60px; /* MODIFICACIÓN CLAVE */
+            }
             main.content-area {
                 padding: 14px;
-                padding-left: calc(var(--nav-width-collapsed) + 32px);
+                padding-left: 90px; /* MODIFICACIÓN CLAVE: 60px (nav) + 16px (nav-offset) + 14px (gap) */
             }
         }
     </style>

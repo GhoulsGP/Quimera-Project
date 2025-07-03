@@ -1,5 +1,5 @@
 <?php 
-    // ARCHIVO: inicio.php (v6.7 - Bug de scrollbar solucionado)
+    // ARCHIVO: inicio.php (v6.7.3 - Corrección Definitiva de Overflow)
 
     include 'plantilla_quimera.php';
     
@@ -39,14 +39,10 @@
     .action-button:hover::after { opacity: 1; transform: scale(1.2); }
     .action-button.active { color: var(--c-accent); }
     .action-button.active svg { fill: var(--c-accent); }
-    
-    /* --- ESTRUCTURA DE SECCIÓN DE COMENTARIOS --- */
     .post-comments-section { max-height: 0; overflow: hidden; transition: all .5s ease-in-out; opacity: 0; border-top: 1px solid var(--c-glass-border); }
     .post-comments-section.open { max-height: 500px; margin-top: 16px; padding-top: 16px; padding-bottom: 16px; opacity: 1; }
     .comments-wrapper { display: flex; flex-direction: column; gap: 16px; height: 100%; }
     .comments-list { overflow-y: auto; flex-grow: 1; padding-right: 8px; margin-right: -8px; }
-
-    /* --- ESTILOS DE COMENTARIOS --- */
     .comment { display: flex; align-items: flex-start; gap: 12px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--c-glass-border); font-size: 0.9rem; line-height: 1.5; }
     .comments-list .comment:last-child { border-bottom: none; margin-bottom: 0; }
     .comment-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
@@ -54,13 +50,12 @@
     .comment-text { color: var(--c-text-secondary); }
     .comment-form { display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding-top: 16px; border-top: 1px solid var(--c-glass-border); }
     .current-user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-    .comment-input { flex-grow: 1; background: hsla(0,0%,100%,0.05); border: 1px solid var(--c-glass-border); border-radius: 16px; padding: 10px 16px; color: var(--c-text); font-size: 0.9rem; outline: none; transition: all var(--transition-fast) ease; }
+    .comment-input { flex-grow: 1; min-width: 0; background: hsla(0,0%,100%,0.05); border: 1px solid var(--c-glass-border); border-radius: 16px; padding: 10px 16px; color: var(--c-text); font-size: 0.9rem; outline: none; transition: all var(--transition-fast) ease; }
     .comment-input::placeholder { color: var(--c-text-secondary); opacity: 0.8; }
     .comment-input:focus { border-color: var(--c-accent); box-shadow: 0 0 0 3px hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.3); }
     .comment-submit-button { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--c-accent); border: none; border-radius: 50%; color: var(--c-accent-text); cursor: pointer; flex-shrink: 0; transition: all var(--transition-fast) ease; }
     .comment-submit-button:hover { transform: scale(1.05); box-shadow: 0 4px 12px hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.4); }
     .comment-submit-button svg { width: 18px; height: 18px; }
-
     .trends-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; }
     .trends-container h3 { margin-bottom: 16px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
     .trends-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; }
@@ -72,10 +67,25 @@
     @media (max-width: 1024px) {
         .home-layout { grid-template-columns: 1fr; }
         .sidebar { display: none; }
+        .feed-container { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
-        .feed-container { grid-template-columns: 1fr; }
         .post-card[data-type="wide"] { grid-column: 1 / -1; }
+        .post-card {
+            padding: 12px;
+        }
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+        }
+        .action-button {
+            width: 40px;
+            height: 40px;
+        }
+        .action-button svg {
+            width: 20px;
+            height: 20px;
+        }
     }
 </style>
 
