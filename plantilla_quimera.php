@@ -188,12 +188,12 @@
     </div>
     <div class="layout-wrapper">
         <nav id="main-nav">
-            <div id="nav-header"><a href="/inicio.php" id="nav-logo"><span class="logo-full">Quimera</span><span class="logo-icon">Q</span></a></div>
+            <div id="nav-header"><a href="inicio.php" id="nav-logo"><span class="logo-full">Quimera</span><span class="logo-icon">Q</span></a></div>
             <ul>
-                <li><a href="/inicio.php" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path></svg><span class="nav-link-text">Inicio</span></a></li>
-                <li><a href="#" class="nav-link" id="search-trigger"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 17.25a6.25 6.25 0 110-12.5 6.25 6.25 0 010 12.5z"></path><path d="M16 16l4.5 4.5"></path></svg><span class="nav-link-text">Buscar</span></a></li>
-                <li><a href="#" class="nav-link" id="notifications-trigger"><span class="pulse-indicator"></span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg><span class="nav-link-text">Notificaciones</span></a></li>
-                <li><a href="#" class="nav-link" id="messages-trigger"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h10a2 2 0 012 2v10z"></path></svg><span class="nav-link-text">Mensajes</span></a></li>
+                <li><a href="inicio.php" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path><path d="M9 22V12h6v10"></path></svg><span class="nav-link-text">Inicio</span></a></li>
+                <li><a href="" class="nav-link" id="search-trigger"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 17.25a6.25 6.25 0 110-12.5 6.25 6.25 0 010 12.5z"></path><path d="M16 16l4.5 4.5"></path></svg><span class="nav-link-text">Buscar</span></a></li>
+                <li><a href="" class="nav-link" id="notifications-trigger"><span class="pulse-indicator"></span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg><span class="nav-link-text">Notificaciones</span></a></li>
+                <li><a href="" class="nav-link" id="messages-trigger"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h10a2 2 0 012 2v10z"></path></svg><span class="nav-link-text">Mensajes</span></a></li>
             </ul>
             <div id="nav-footer">
                 <a href="/perfil.php" class="nav-link"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><path d="M12 11a4 4 0 100-8 4 4 0 000 8z"></path></svg><span class="nav-link-text">Perfil</span></a>
