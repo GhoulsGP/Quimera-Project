@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v10.0 - SISTEMA ESTABLE)
+// ARCHIVO: pie_quimera.php (v10.1 - Lógica de Perfil Añadida)
 ?>
         </main>
     </div>
@@ -219,7 +219,7 @@
         }
         
         // --- LÓGICA DE INTERACCIÓN DE POSTS ---
-        const feedContainer = document.querySelector('.feed-container');
+        const feedContainer = document.querySelector('.feed-container, .profile-main-content'); // Selector actualizado
         if(feedContainer) {
             feedContainer.addEventListener('click', (e) => {
                 const likeButton = e.target.closest('.like-button');
@@ -235,6 +235,29 @@
                         if (commentsSection) { commentsSection.classList.toggle('open'); }
                     }
                 }
+            });
+        }
+
+        // --- LÓGICA DE PERFIL DE USUARIO (PESTAÑAS) ---
+        const profileTabsContainer = document.querySelector('.profile-tabs');
+        if (profileTabsContainer) {
+            const tabLinks = profileTabsContainer.querySelectorAll('.tab-link');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    const tabId = link.dataset.tab;
+
+                    // Desactivar todas las pestañas y contenidos
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    // Activar la pestaña y contenido seleccionados
+                    link.classList.add('active');
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                });
             });
         }
     });
