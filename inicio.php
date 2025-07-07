@@ -1,5 +1,5 @@
 <?php 
-    // ARCHIVO: inicio.php (v7.1 - Estilo de Botón Guardar Activo)
+    // ARCHIVO: inicio.php (v7.2 - Añadida Tarjeta de Creación de Post)
 
     include 'plantilla_quimera.php';
     
@@ -25,9 +25,87 @@
 
 <style>
     .home-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: flex-start; }
-    .feed-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: flex-start; }
+    .feed-container { display: flex; flex-direction: column; gap: 24px; }
     .sidebar { position: sticky; top: 16px; }
-    .post-card { display: flex; flex-direction: column; gap: 16px; background: var(--c-glass-bg); border: 1px solid var(--c-glass-border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; }
+    
+    /* INICIO MODIFICACIÓN: Estilos para Tarjeta de Creación de Post */
+    .create-post-card {
+        background: var(--c-glass-bg);
+        border: 1px solid var(--c-glass-border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        box-shadow: 0 8px 24px hsla(0,0%,0%,0.1);
+    }
+    .create-post-main {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    .create-post-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .create-post-textarea {
+        flex-grow: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--c-text);
+        font-size: 1.1rem;
+        font-family: var(--font-main);
+        resize: none;
+        min-height: 60px;
+        padding-top: 12px;
+    }
+    .create-post-textarea::placeholder {
+        color: var(--c-text-secondary);
+    }
+    .create-post-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 16px;
+        border-top: 1px solid var(--c-glass-border);
+    }
+    .create-post-actions button {
+        background: none;
+        border: none;
+        color: var(--c-text-secondary);
+        cursor: pointer;
+        padding: 8px;
+    }
+    .create-post-actions button:hover svg {
+        stroke: var(--c-accent);
+    }
+    .create-post-actions svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        transition: stroke var(--transition-fast) ease;
+    }
+    .submit-post-button {
+        background: var(--c-accent);
+        color: var(--c-accent-text);
+        border: none;
+        border-radius: 99px;
+        padding: 10px 24px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+    }
+    .submit-post-button:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 15px hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.3);
+    }
+    /* FIN MODIFICACIÓN */
+
+    .post-feed { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: flex-start; }
+    .post-card { display: flex; flex-direction: column; gap: 16px; background: var(--c-glass-bg); border: 1px solid var(--c-glass-border); border-radius: var(--radius-lg); padding: 24px; }
     .post-card[data-type="wide"] { grid-column: 1 / -1; }
     .post-header { display: flex; align-items: center; gap: 12px; }
     .post-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
@@ -49,11 +127,7 @@
     .action-button:hover::after { opacity: 1; transform: scale(1.2); }
     .action-button.active { color: var(--c-accent); }
     .action-button.active svg { fill: var(--c-accent); }
-    /* INICIO MODIFICACIÓN: Estilo para botón Guardar activo */
-    .action-button.save-button.active svg {
-        fill: var(--c-accent);
-    }
-    /* FIN MODIFICACIÓN */
+    .action-button.save-button.active svg { fill: var(--c-accent); }
     .post-comments-section { max-height: 0; overflow: hidden; transition: all .5s ease-in-out; opacity: 0; border-top: 1px solid var(--c-glass-border); }
     .post-comments-section.open { max-height: 500px; margin-top: 16px; padding-top: 16px; padding-bottom: 16px; opacity: 1; }
     .comments-wrapper { display: flex; flex-direction: column; gap: 16px; height: 100%; }
@@ -109,7 +183,7 @@
             position: static;
             margin-top: 24px;
         }
-        .feed-container { 
+        .post-feed { 
             grid-template-columns: 1fr; 
         }
     }
@@ -124,55 +198,72 @@
 
 <div class="home-layout">
     <div class="feed-container">
-        <?php foreach ($posts as $index => $post): ?>
-            <article class="post-card" data-type="<?php echo htmlspecialchars($post['type']); ?>">
-                <header class="post-header">
-                     <img src="https://randomuser.me/api/portraits/lego/<?php echo $index; ?>.jpg" alt="Avatar" class="post-avatar">
-                     <span class="post-author-name"><?php echo htmlspecialchars($post['autor_nombre']); ?></span>
-                </header>
-                <div class="post-body">
-                    <p class="post-content"><?php echo htmlspecialchars($post['contenido']); ?></p>
-                    <?php if (isset($post['imagen']) && $post['imagen']): ?>
-                        <div class="post-image-container">
-                            <img src="<?php echo htmlspecialchars($post['imagen']); ?>" alt="Imagen del post" class="post-image">
-                        </div>
-                    <?php endif; ?>
+        
+        <div class="create-post-card">
+            <div class="create-post-main">
+                <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Tu Avatar" class="create-post-avatar">
+                <textarea class="create-post-textarea" placeholder="¿Qué estás pensando, Alex?"></textarea>
+            </div>
+            <div class="create-post-footer">
+                <div class="create-post-actions">
+                    <button title="Añadir imagen"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg></button>
+                    <button title="Encuesta"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M17 10H3M21 6H3M21 14H3M17 18H3"></path></svg></button>
+                    <button title="Mencionar usuario"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="8.5" cy="7.5" r="4.5"></circle><path d="M23 11h-6"></path></svg></button>
                 </div>
-                <footer class="post-footer">
-                    <div class="post-actions-main">
-                        <button class="action-button like-button" title="Me gusta"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button>
-                        <button class="action-button comment-button" title="Comentar"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10z"></path></svg></button>
+                <button class="submit-post-button">Publicar</button>
+            </div>
+        </div>
+        <div class="post-feed">
+            <?php foreach ($posts as $index => $post): ?>
+                <article class="post-card" data-type="<?php echo htmlspecialchars($post['type']); ?>">
+                    <header class="post-header">
+                         <img src="https://randomuser.me/api/portraits/lego/<?php echo $index; ?>.jpg" alt="Avatar" class="post-avatar">
+                         <span class="post-author-name"><?php echo htmlspecialchars($post['autor_nombre']); ?></span>
+                    </header>
+                    <div class="post-body">
+                        <p class="post-content"><?php echo htmlspecialchars($post['contenido']); ?></p>
+                        <?php if (isset($post['imagen']) && $post['imagen']): ?>
+                            <div class="post-image-container">
+                                <img src="<?php echo htmlspecialchars($post['imagen']); ?>" alt="Imagen del post" class="post-image">
+                            </div>
+                        <?php endif; ?>
                     </div>
-                    <div class="post-actions-secondary">
-                        <button class="action-button save-button" title="Guardar"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></button>
-                    </div>
-                </footer>
-                <section class="post-comments-section">
-                    <div class="comments-wrapper">
-                        <div class="comments-list">
-                            <?php if (!empty($post['comments'])): ?>
-                                <?php foreach ($post['comments'] as $comment): ?>
-                                    <div class="comment">
-                                        <img src="https://randomuser.me/api/portraits/lego/<?php echo rand(0, 8); ?>.jpg" alt="Avatar de usuario" class="comment-avatar">
-                                        <div class="comment-content">
-                                            <span class="comment-author"><?php echo htmlspecialchars($comment['user']); ?></span>
-                                            <span class="comment-text"><?php echo htmlspecialchars($comment['text']); ?></span>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
+                    <footer class="post-footer">
+                        <div class="post-actions-main">
+                            <button class="action-button like-button" title="Me gusta"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button>
+                            <button class="action-button comment-button" title="Comentar"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10z"></path></svg></button>
                         </div>
-                        <form class="comment-form" action="#" method="POST" onsubmit="event.preventDefault();">
-                            <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Tu Avatar" class="current-user-avatar">
-                            <input type="text" class="comment-input" placeholder="Escribe un comentario...">
-                            <button type="submit" class="comment-submit-button" title="Publicar comentario">
-                                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
-                            </button>
-                        </form>
-                    </div>
-                </section>
-            </article>
-        <?php endforeach; ?>
+                        <div class="post-actions-secondary">
+                            <button class="action-button save-button" title="Guardar"><svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></button>
+                        </div>
+                    </footer>
+                    <section class="post-comments-section">
+                        <div class="comments-wrapper">
+                            <div class="comments-list">
+                                <?php if (!empty($post['comments'])): ?>
+                                    <?php foreach ($post['comments'] as $comment): ?>
+                                        <div class="comment">
+                                            <img src="https://randomuser.me/api/portraits/lego/<?php echo rand(0, 8); ?>.jpg" alt="Avatar de usuario" class="comment-avatar">
+                                            <div class="comment-content">
+                                                <span class="comment-author"><?php echo htmlspecialchars($comment['user']); ?></span>
+                                                <span class="comment-text"><?php echo htmlspecialchars($comment['text']); ?></span>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                            <form class="comment-form" action="#" method="POST" onsubmit="event.preventDefault();">
+                                <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Tu Avatar" class="current-user-avatar">
+                                <input type="text" class="comment-input" placeholder="Escribe un comentario...">
+                                <button type="submit" class="comment-submit-button" title="Publicar comentario">
+                                    <svg fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </section>
+                </article>
+            <?php endforeach; ?>
+        </div>
     </div>
     <aside class="sidebar">
         <div class="trends-container">
