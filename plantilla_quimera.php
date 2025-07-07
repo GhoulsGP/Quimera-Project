@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: plantilla_quimera.php (v8.2 - Corrección de Regresión y Sincronización)
+// ARCHIVO: plantilla_quimera.php (v8.3 - Corrección de Estructura DOM)
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -212,3 +212,4 @@
         </nav>
         
         <main class="content-area">
+    

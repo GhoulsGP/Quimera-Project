@@ -1,5 +1,5 @@
 <?php
-// ARCHIVO: pie_quimera.php (v6.0 - Definitiva)
+// ARCHIVO: pie_quimera.php (v6.5 - Corrección de Interacción de Paneles)
 ?>
         </main>
     </div>
@@ -111,37 +111,94 @@
             });
         }
         
-        // --- SCRIPTS ESPECÍFICOS DE LA PÁGINA DE INICIO ---
-        if(document.querySelector('.home-layout')) {
+        // --- INICIO: LÓGICA DE PANELES INTERACTIVOS (BÚSQUEDA, NOTIFICACIONES, MENSAJES) ---
+        const searchTrigger = document.getElementById('search-trigger');
+        const searchPalette = document.getElementById('search-palette');
+        const searchBackdrop = document.getElementById('search-backdrop');
 
-            // --- LÓGICA DE INTERACCIÓN DE TARJETAS (RESTAURADA Y VERIFICADA) ---
-            document.querySelectorAll('.post-card').forEach(card => {
+        const notificationsTrigger = document.getElementById('notifications-trigger');
+        const notificationsPopover = document.getElementById('notifications-popover');
+
+        const messagesTrigger = document.getElementById('messages-trigger');
+        const messageCenter = document.getElementById('message-center');
+        const mcBackdrop = messageCenter.querySelector('.mc-backdrop');
+
+        if (searchTrigger && searchPalette && searchBackdrop) {
+            searchTrigger.addEventListener('click', e => {
+                e.preventDefault();
+                searchPalette.classList.add('open');
+            });
+            searchBackdrop.addEventListener('click', () => {
+                searchPalette.classList.remove('open');
+            });
+        }
+
+        if (notificationsTrigger && notificationsPopover) {
+            notificationsTrigger.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation(); // Evita que el click se propague al listener del documento y cierre el popover inmediatamente.
+                notificationsPopover.classList.toggle('open');
+            });
+        }
+        
+        if (messagesTrigger && messageCenter && mcBackdrop) {
+            messagesTrigger.addEventListener('click', e => {
+                e.preventDefault();
+                messageCenter.classList.add('open');
+            });
+            mcBackdrop.addEventListener('click', () => {
+                messageCenter.classList.remove('open');
+            });
+        }
+
+        // Listener global para cerrar elementos como popovers al hacer click fuera de ellos.
+        document.addEventListener('click', (e) => {
+            // Cierre del popover de notificaciones.
+            if (notificationsPopover && notificationsPopover.classList.contains('open')) {
+                if (!notificationsPopover.contains(e.target) && !notificationsTrigger.contains(e.target)) {
+                    notificationsPopover.classList.remove('open');
+                }
+            }
+        });
+        // --- FIN: LÓGICA DE PANELES INTERACTIVOS ---
+
+        // --- LÓGICA DE INTERACCIÓN DE TARJETAS (GENERALIZADA Y CORREGIDA) ---
+        // Esta lógica ahora se aplica a cualquier página que contenga un .post-card
+        const postCards = document.querySelectorAll('.post-card');
+        if (postCards.length > 0) {
+            postCards.forEach(card => {
                 const likeButton = card.querySelector('.like-button');
                 const commentButton = card.querySelector('.comment-button');
                 const saveButton = card.querySelector('.save-button');
                 const commentsSection = card.querySelector('.post-comments-section');
 
-                if (likeButton) { 
+                // Se adjuntan los listeners solo si no han sido adjuntados previamente
+                if (likeButton && !likeButton.dataset.listenerAttached) { 
                     likeButton.addEventListener('click', (e) => { 
                         e.stopPropagation();
                         likeButton.classList.toggle('active'); 
-                    }); 
+                    });
+                    likeButton.dataset.listenerAttached = 'true';
                 }
-                if (commentButton && commentsSection) { 
+                if (commentButton && commentsSection && !commentButton.dataset.listenerAttached) { 
                     commentButton.addEventListener('click', (e) => { 
                         e.stopPropagation();
                         commentsSection.classList.toggle('open'); 
-                    }); 
+                    });
+                    commentButton.dataset.listenerAttached = 'true';
                 }
-                if (saveButton) { 
+                if (saveButton && !saveButton.dataset.listenerAttached) { 
                     saveButton.addEventListener('click', (e) => {
                         e.stopPropagation(); 
                         saveButton.classList.toggle('active'); 
-                    }); 
+                    });
+                    saveButton.dataset.listenerAttached = 'true';
                 }
             });
+        }
 
-            // --- TEXTO CINÉTICO (VERIFICADO) ---
+        // --- SCRIPTS ESPECÍFICOS DE LA PÁGINA DE INICIO ---
+        if(document.querySelector('.home-layout')) {
             const kineticTexts = document.querySelectorAll('.kinetic-text');
             kineticTexts.forEach(text => {
                 if (text.classList.contains('kinetic-processed')) return;
@@ -156,6 +213,105 @@
                 text.classList.add('kinetic-processed');
             });
         }
+
+        // --- LÓGICA DE PESTAÑAS PARA PÁGINA DE PERFIL (LEGACY v4.0) ---
+        if (document.querySelector('.profile-spotlight-layout')) {
+            const tabsContainer = document.querySelector('.profile-tabs ul');
+            if (tabsContainer) {
+                const tabLinks = tabsContainer.querySelectorAll('.tab-link');
+                const tabContents = document.querySelectorAll('.tab-content');
+
+                tabsContainer.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const clickedTab = e.target.closest('.tab-link');
+
+                    if (!clickedTab || clickedTab.classList.contains('active')) {
+                        return;
+                    }
+                    
+                    tabLinks.forEach(link => link.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    clickedTab.classList.add('active');
+                    const tabId = clickedTab.dataset.tab;
+                    const newActiveContent = document.getElementById(`tab-${tabId}`);
+                    if (newActiveContent) {
+                        newActiveContent.classList.add('active');
+                    }
+                });
+            }
+        }
+        
+        // --- INICIO: LÓGICA DE PERFIL "QUANTUM GLASS" (v5.1 - CORREGIDO) ---
+        if (document.querySelector('.profile-qg-layout')) {
+            // 1. Efecto Parallax para la portada
+            const heroCover = document.getElementById('qg-hero-cover');
+            if(heroCover) {
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+                    heroCover.style.transform = `scale(1.1) translateY(${scrollY * 0.3}px)`;
+                });
+            }
+
+            // 2. Animación de entrada para las tarjetas de la Sidebar
+            const sidebarCards = document.querySelectorAll('.profile-qg-sidebar .profile-qg-card');
+            if (sidebarCards.length > 0) {
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach((entry, index) => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.transitionDelay = `${index * 100}ms`;
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                sidebarCards.forEach(card => {
+                    observer.observe(card);
+                });
+            }
+
+            // 3. Lógica de Pestañas Animadas
+            const tabsContainer = document.querySelector('.profile-qg-tabs ul');
+            if (tabsContainer) {
+                const tabLinks = tabsContainer.querySelectorAll('.tab-link');
+                const tabContents = document.querySelectorAll('.profile-qg-main .tab-content');
+
+                tabsContainer.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const clickedTab = e.target.closest('.tab-link');
+
+                    if (!clickedTab || clickedTab.classList.contains('active')) {
+                        return;
+                    }
+                    
+                    const currentActiveTab = tabsContainer.querySelector('.active');
+                    const currentActiveContent = document.querySelector('.tab-content.active');
+                    const tabId = clickedTab.dataset.tab;
+                    const newActiveContent = document.getElementById(`tab-${tabId}`);
+
+                    if (currentActiveContent && newActiveContent) {
+                        currentActiveContent.style.opacity = '0';
+                        setTimeout(() => {
+                            currentActiveTab.classList.remove('active');
+                            currentActiveContent.classList.remove('active');
+                            currentActiveContent.style.opacity = '';
+                            
+                            clickedTab.classList.add('active');
+                            newActiveContent.classList.add('active');
+                            newActiveContent.style.opacity = '0';
+                            
+                            void newActiveContent.offsetWidth; 
+                            
+                            newActiveContent.style.transition = 'opacity 0.4s ease';
+                            newActiveContent.style.opacity = '1';
+                        }, 300);
+                    }
+                });
+            }
+        }
+        // --- FIN: LÓGICA DE PERFIL "QUANTUM GLASS" ---
+
     });
     </script>
 </body>

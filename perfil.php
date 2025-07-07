@@ -1,5 +1,5 @@
 <?php 
-    // ARCHIVO: perfil.php (v3.1 - Funcionalidad de botones RESTAURADA)
+    // ARCHIVO: perfil.php (v5.1 - Corrección de Regresión, CSS Integrado)
 
     include 'plantilla_quimera.php';
 
@@ -18,7 +18,7 @@
 ?>
 
 <style>
-    /* === ARQUITECTURA "SPOTLIGHT LAYOUT" === */
+    /* === ARQUITECTURA "SPOTLIGHT LAYOUT" (LEGACY v4.0) === */
     @keyframes spotlight-fade-in {
         from { opacity: 0; transform: translateY(30px) scale(0.98); }
         to { opacity: 1; transform: translateY(0) scale(1); }
@@ -93,7 +93,6 @@
     .action-button.active svg { fill: var(--c-accent); }
     .action-button.save-button.active svg { fill: var(--c-accent); }
     
-    /* === INICIO DE ESTILOS PARA SECCIÓN DE COMENTARIOS (CORRECCIÓN) === */
     .post-comments-section { max-height: 0; overflow: hidden; transition: all .5s ease-in-out; opacity: 0; border-top: 1px solid var(--c-glass-border); }
     .post-comments-section.open { max-height: 500px; margin-top: 16px; padding-top: 16px; opacity: 1; }
     .comments-wrapper { display: flex; flex-direction: column; gap: 16px; }
@@ -122,36 +121,241 @@
     }
 </style>
 
-<div class="profile-spotlight-layout">
-    <section class="profile-hero">
-        <img src="<?php echo htmlspecialchars($user['cover_image']); ?>" alt="Cover Image" class="profile-hero-bg">
-        <div class="profile-card-floating">
-            <header class="floating-card-header">
-                <img src="<?php echo htmlspecialchars($user['avatar']); ?>" alt="Avatar" class="floating-card-avatar">
-                <div class="floating-card-title">
-                    <h1><?php echo htmlspecialchars($user['nombre']); ?></h1>
-                    <p class="handle"><?php echo htmlspecialchars($user['handle']); ?></p>
-                </div>
-            </header>
-            <div class="floating-card-body">
-                <p class="bio"><?php echo htmlspecialchars($user['bio_long']); ?></p>
-                <div class="floating-card-actions">
-                    <button class="profile-button">Seguir</button>
-                    <button class="profile-button secondary">Mensaje</button>
-                </div>
+<style>
+    :root {
+        --qg-blur: 24px;
+        --qg-bg-color: hsla(220, 15%, 12%, 0.5);
+        --qg-border-color: hsla(220, 15%, 70%, 0.15);
+        --qg-glow-color: hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.2);
+        --qg-transition-slow: 0.8s;
+        --qg-transition-fast: 0.3s;
+    }
+
+    @keyframes qg-fade-in-up {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .profile-qg-layout {
+        opacity: 0;
+        animation: qg-fade-in-up 1s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* --- Hero Section --- */
+    .profile-qg-hero {
+        width: 100%;
+        height: 350px;
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        padding: 32px;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        margin-bottom: 32px;
+    }
+    .profile-qg-hero__cover {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        transform: scale(1.1);
+    }
+    .profile-qg-hero__gradient {
+        position: absolute;
+        bottom: 0; left: 0;
+        width: 100%; height: 70%;
+        background: linear-gradient(to top, hsla(0,0%,0%,0.8), transparent);
+        z-index: 2;
+    }
+
+    /* --- User Info Card (Floating) --- */
+    .profile-qg-user-card {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        width: 100%;
+    }
+    .profile-qg-user-card__avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--qg-border-color);
+        box-shadow: 0 8px 32px hsla(0,0%,0%,0.5), 0 0 0 1px var(--qg-border-color);
+    }
+    .profile-qg-user-card__info {
+        flex-grow: 1;
+        text-shadow: 0 2px 10px hsla(0,0%,0%,0.5);
+    }
+    .profile-qg-user-card__name {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.1;
+    }
+    .profile-qg-user-card__handle {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: var(--c-text);
+        opacity: 0.8;
+    }
+    .profile-qg-user-card__actions {
+        display: flex;
+        gap: 12px;
+        margin-left: auto;
+        align-self: center;
+    }
+
+    /* --- Main Content Body --- */
+    .profile-qg-body {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        grid-template-areas: "sidebar main";
+        gap: 24px;
+        align-items: flex-start;
+    }
+    .profile-qg-main { grid-area: main; }
+    .profile-qg-sidebar { grid-area: sidebar; position: sticky; top: 16px; }
+    
+    /* --- Sidebar Components --- */
+    .profile-qg-card {
+        background: var(--qg-bg-color);
+        backdrop-filter: blur(var(--qg-blur));
+        border: 1px solid var(--qg-border-color);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        box-shadow: 0 8px 24px hsla(0,0%,0%,0.2);
+        margin-bottom: 24px;
+    }
+    .profile-qg-sidebar .profile-qg-card {
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .profile-qg-sidebar .profile-qg-card.is-visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .profile-qg-card__header {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--c-text);
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid var(--qg-border-color);
+    }
+    .profile-qg-bio p {
+        color: var(--c-text-secondary);
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+    .profile-qg-stats { display: flex; justify-content: space-between; text-align: center; }
+    .profile-qg-stats__item .value { font-size: 1.5rem; font-weight: 700; color: var(--c-text); }
+    .profile-qg-stats__item .label { font-size: 0.85rem; color: var(--c-text-secondary); text-transform: uppercase; letter-spacing: 0.5px;}
+
+    /* --- Tabs --- */
+    .profile-qg-tabs {
+        display: flex;
+        align-items: center;
+        background: var(--qg-bg-color);
+        backdrop-filter: blur(var(--qg-blur));
+        border: 1px solid var(--qg-border-color);
+        border-radius: var(--radius-lg);
+        padding: 8px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 24px hsla(0,0%,0%,0.2);
+    }
+    .profile-qg-tabs .tab-link {
+        flex: 1;
+        text-align: center;
+        padding: 12px 20px;
+        font-weight: 600;
+        color: var(--c-text-secondary);
+        cursor: pointer;
+        border-radius: var(--radius-md);
+        position: relative;
+        transition: color var(--qg-transition-fast) ease;
+    }
+    .profile-qg-tabs .tab-link:hover { color: var(--c-text); }
+    .profile-qg-tabs .tab-link.active {
+        color: var(--c-text);
+        background: hsla(0,0%,100%,0.1);
+        box-shadow: 0 2px 8px hsla(0,0%,0%,0.3);
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: grid; gap: 24px; }
+
+    /* --- Responsive Adjustments --- */
+    @media (max-width: 1024px) {
+        .profile-qg-body {
+            grid-template-columns: 1fr;
+            grid-template-areas: "main" "sidebar";
+        }
+        .profile-qg-sidebar { position: static; }
+    }
+    @media (max-width: 768px) {
+        .profile-qg-hero { height: auto; min-height: 300px; padding: 24px 16px; flex-direction: column; align-items: center; text-align: center; }
+        .profile-qg-user-card { flex-direction: column; }
+        .profile-qg-user-card__avatar { width: 120px; height: 120px; }
+        .profile-qg-user-card__name { font-size: 2.2rem; }
+        .profile-qg-user-card__actions { margin: 16px auto 0; }
+    }
+</style>
+
+
+<div class="profile-qg-layout">
+    
+    <section class="profile-qg-hero" id="qg-hero">
+        <img src="<?php echo htmlspecialchars($user['cover_image']); ?>" alt="Cover Image" class="profile-qg-hero__cover" id="qg-hero-cover">
+        <div class="profile-qg-hero__gradient"></div>
+        <div class="profile-qg-user-card">
+            <img src="<?php echo htmlspecialchars($user['avatar']); ?>" alt="Avatar" class="profile-qg-user-card__avatar">
+            <div class="profile-qg-user-card__info">
+                <h1 class="profile-qg-user-card__name"><?php echo htmlspecialchars($user['nombre']); ?></h1>
+                <p class="profile-qg-user-card__handle"><?php echo htmlspecialchars($user['handle']); ?></p>
+            </div>
+            <div class="profile-qg-user-card__actions">
+                <button class="profile-button">Seguir</button>
+                <button class="profile-button secondary">Mensaje</button>
             </div>
         </div>
     </section>
 
-    <div class="profile-content-body">
-        <main class="profile-main-content">
-            <nav class="profile-tabs">
+    <div class="profile-qg-body">
+        
+        <aside class="profile-qg-sidebar">
+            <div class="profile-qg-card profile-qg-bio">
+                <h3 class="profile-qg-card__header">Sobre mi</h3>
+                <p><?php echo htmlspecialchars($user['bio_long']); ?></p>
+            </div>
+            <div class="profile-qg-card profile-qg-stats">
+                <div class="profile-qg-stats__item">
+                    <div class="value"><?php echo htmlspecialchars($user['stats']['posts']); ?></div>
+                    <div class="label">Posts</div>
+                </div>
+                <div class="profile-qg-stats__item">
+                    <div class="value"><?php echo htmlspecialchars($user['stats']['followers']); ?></div>
+                    <div class="label">Seguidores</div>
+                </div>
+                <div class="profile-qg-stats__item">
+                    <div class="value"><?php echo htmlspecialchars($user['stats']['following']); ?></div>
+                    <div class="label">Siguiendo</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="profile-qg-main">
+            <nav class="profile-qg-tabs profile-tabs">
                 <ul>
                     <li><a class="tab-link active" data-tab="posts">Posts</a></li>
                     <li><a class="tab-link" data-tab="media">Media</a></li>
                     <li><a class="tab-link" data-tab="likes">Likes</a></li>
                 </ul>
             </nav>
+
             <div id="tab-posts" class="tab-content active">
                 <?php foreach ($user['posts'] as $index => $post): ?>
                     <article class="post-card">
@@ -194,21 +398,13 @@
                         </article>
                 <?php endforeach; ?>
             </div>
-            <div id="tab-media" class="tab-content"><div class="profile-card">Media Content Placeholder</div></div>
-            <div id="tab-likes" class="tab-content"><div class="profile-card">Likes Content Placeholder</div></div>
+            <div id="tab-media" class="tab-content"><div class="profile-qg-card"><h3>Media Content Placeholder</h3></div></div>
+            <div id="tab-likes" class="tab-content"><div class="profile-qg-card"><h3>Likes Content Placeholder</h3></div></div>
         </main>
-        <aside class="profile-sidebar">
-            <div class="profile-card">
-                <h3>Estadísticas</h3>
-                <div class="profile-stats-list">
-                    <div class="stat-item"><span class="stat-value"><?php echo htmlspecialchars($user['stats']['posts']); ?></span><span class="stat-label">Posts</span></div>
-                    <div class="stat-item"><span class="stat-value"><?php echo htmlspecialchars($user['stats']['followers']); ?></span><span class="stat-label">Seguidores</span></div>
-                    <div class="stat-item"><span class="stat-value"><?php echo htmlspecialchars($user['stats']['following']); ?></span><span class="stat-label">Siguiendo</span></div>
-                </div>
-            </div>
-        </aside>
+
     </div>
 </div>
+
 
 <?php
     include 'pie_quimera.php'; 
