@@ -1,5 +1,5 @@
 <?php 
-    // ARCHIVO: inicio.php (v6.7 - Bug de scrollbar solucionado)
+    // ARCHIVO: inicio.php (v7.1 - Estilo de Botón Guardar Activo)
 
     include 'plantilla_quimera.php';
     
@@ -11,6 +11,16 @@
         [ 'autor_nombre' => 'David UX', 'type' => 'normal', 'contenido' => 'Cada tarjeta se adapta a su contenido sin romper el layout general.', 'imagen' => null, 'comments' => []],
     ];
     $tendencias = ['#QuimeraProject', '#StableBuild', '#FinalFix', '#UX'];
+    $sugerencias = [
+        ['nombre' => 'Marco Polo', 'handle' => '@marcop', 'avatar_id' => '3'],
+        ['nombre' => 'Jane Dev', 'handle' => '@janedev', 'avatar_id' => '4'],
+        ['nombre' => 'Alex UI', 'handle' => '@alexui', 'avatar_id' => '5']
+    ];
+    $actividad = [
+        ['label' => 'Vistas al Perfil', 'value' => 742, 'max' => 1000, 'color' => '210, 90%, 60%'],
+        ['label' => 'Interacciones', 'value' => 124, 'max' => 200, 'color' => '260, 80%, 70%'],
+        ['label' => 'Nuevos Contactos', 'value' => 18, 'max' => 25, 'color' => '310, 80%, 65%']
+    ];
 ?>
 
 <style>
@@ -39,14 +49,15 @@
     .action-button:hover::after { opacity: 1; transform: scale(1.2); }
     .action-button.active { color: var(--c-accent); }
     .action-button.active svg { fill: var(--c-accent); }
-    
-    /* --- ESTRUCTURA DE SECCIÓN DE COMENTARIOS --- */
+    /* INICIO MODIFICACIÓN: Estilo para botón Guardar activo */
+    .action-button.save-button.active svg {
+        fill: var(--c-accent);
+    }
+    /* FIN MODIFICACIÓN */
     .post-comments-section { max-height: 0; overflow: hidden; transition: all .5s ease-in-out; opacity: 0; border-top: 1px solid var(--c-glass-border); }
     .post-comments-section.open { max-height: 500px; margin-top: 16px; padding-top: 16px; padding-bottom: 16px; opacity: 1; }
     .comments-wrapper { display: flex; flex-direction: column; gap: 16px; height: 100%; }
     .comments-list { overflow-y: auto; flex-grow: 1; padding-right: 8px; margin-right: -8px; }
-
-    /* --- ESTILOS DE COMENTARIOS --- */
     .comment { display: flex; align-items: flex-start; gap: 12px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--c-glass-border); font-size: 0.9rem; line-height: 1.5; }
     .comments-list .comment:last-child { border-bottom: none; margin-bottom: 0; }
     .comment-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
@@ -54,13 +65,12 @@
     .comment-text { color: var(--c-text-secondary); }
     .comment-form { display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding-top: 16px; border-top: 1px solid var(--c-glass-border); }
     .current-user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-    .comment-input { flex-grow: 1; background: hsla(0,0%,100%,0.05); border: 1px solid var(--c-glass-border); border-radius: 16px; padding: 10px 16px; color: var(--c-text); font-size: 0.9rem; outline: none; transition: all var(--transition-fast) ease; }
+    .comment-input { flex-grow: 1; min-width: 0; background: hsla(0,0%,100%,0.05); border: 1px solid var(--c-glass-border); border-radius: 16px; padding: 10px 16px; color: var(--c-text); font-size: 0.9rem; outline: none; transition: all var(--transition-fast) ease; }
     .comment-input::placeholder { color: var(--c-text-secondary); opacity: 0.8; }
     .comment-input:focus { border-color: var(--c-accent); box-shadow: 0 0 0 3px hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.3); }
     .comment-submit-button { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--c-accent); border: none; border-radius: 50%; color: var(--c-accent-text); cursor: pointer; flex-shrink: 0; transition: all var(--transition-fast) ease; }
     .comment-submit-button:hover { transform: scale(1.05); box-shadow: 0 4px 12px hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.4); }
     .comment-submit-button svg { width: 18px; height: 18px; }
-
     .trends-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; }
     .trends-container h3 { margin-bottom: 16px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
     .trends-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; }
@@ -68,14 +78,47 @@
     .kinetic-text:hover .char { animation: kinetic-scramble 0.8s ease-out forwards; }
     .char { display: inline-block; }
     @keyframes kinetic-scramble { 0%{transform:translate(0,0)} 50%{transform:translate(var(--dx),var(--dy)) rotate(var(--r))} 100%{transform:translate(0,0)} }
+    .suggestions-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; margin-top: 24px; }
+    .suggestions-container h3 { margin-bottom: 16px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
+    .suggestions-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 20px; }
+    .suggestion-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .suggestion-user-info { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .suggestion-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .suggestion-user-text { display: flex; flex-direction: column; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .suggestion-user-name { font-weight: 600; color: var(--c-text); }
+    .suggestion-user-handle { color: var(--c-text-secondary); font-size: 0.9em; }
+    .follow-button { background: hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.8); color: var(--c-accent-text); border: none; border-radius: 99px; padding: 8px 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease-out; flex-shrink: 0; font-size: 0.9em; }
+    .follow-button:hover { transform: scale(1.03); background: var(--c-accent); box-shadow: 0 4px 15px hsla(var(--c-accent-h), var(--c-accent-s), var(--c-accent-l), 0.3); }
+    .activity-summary-container { background: var(--c-glass-bg); border-radius: var(--radius-lg); padding: 24px; margin-top: 24px; }
+    .activity-summary-container h3 { margin-bottom: 20px; border-bottom: 1px solid var(--c-glass-border); padding-bottom: 10px; }
+    .activity-list { display: flex; justify-content: space-around; align-items: flex-start; text-align: center; }
+    .activity-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .progress-ring { width: 70px; height: 70px; position: relative; }
+    .progress-ring__svg { transform: rotate(-90deg); }
+    .progress-ring__circle, .progress-ring__circle-bg { fill: transparent; stroke-width: 4; }
+    .progress-ring__circle-bg { stroke: hsla(0, 0%, 100%, 0.1); }
+    .progress-ring__circle { stroke-linecap: round; stroke: var(--stroke-color); stroke-dasharray: 113.1; stroke-dashoffset: calc(113.1 * (1 - var(--percentage, 0))); transition: stroke-dashoffset 1s 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); }
+    .progress-ring__value { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--c-text); font-weight: 600; font-size: 0.9em; }
+    .activity-item__label { font-size: 0.8em; color: var(--c-text-secondary); font-weight: 500; }
 
     @media (max-width: 1024px) {
-        .home-layout { grid-template-columns: 1fr; }
-        .sidebar { display: none; }
+        .home-layout { 
+            grid-template-columns: 1fr;
+        }
+        .sidebar {
+            position: static;
+            margin-top: 24px;
+        }
+        .feed-container { 
+            grid-template-columns: 1fr; 
+        }
     }
     @media (max-width: 768px) {
-        .feed-container { grid-template-columns: 1fr; }
         .post-card[data-type="wide"] { grid-column: 1 / -1; }
+        .post-card { padding: 12px; }
+        .post-avatar { width: 40px; height: 40px; }
+        .action-button { width: 40px; height: 40px; }
+        .action-button svg { width: 20px; height: 20px; }
     }
 </style>
 
@@ -139,6 +182,41 @@
                     <li><a href="#" class="kinetic-text"><?php echo htmlspecialchars($tendencia); ?></a></li>
                 <?php endforeach; ?>
             </ul>
+        </div>
+        <div class="suggestions-container">
+            <h3>Sugerencias para ti</h3>
+            <ul class="suggestions-list">
+                <?php foreach ($sugerencias as $sugerencia): ?>
+                <li class="suggestion-item">
+                    <div class="suggestion-user-info">
+                        <img src="https://randomuser.me/api/portraits/lego/<?php echo htmlspecialchars($sugerencia['avatar_id']); ?>.jpg" alt="Avatar" class="suggestion-avatar">
+                        <div class="suggestion-user-text">
+                            <span class="suggestion-user-name"><?php echo htmlspecialchars($sugerencia['nombre']); ?></span>
+                            <span class="suggestion-user-handle"><?php echo htmlspecialchars($sugerencia['handle']); ?></span>
+                        </div>
+                    </div>
+                    <button class="follow-button">Seguir</button>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="activity-summary-container">
+            <h3>Resumen de Actividad</h3>
+            <div class="activity-list">
+                <?php foreach ($actividad as $stat): ?>
+                <div class="activity-item">
+                    <div class="progress-ring">
+                        <svg class="progress-ring__svg" width="70" height="70" viewBox="0 0 44 44">
+                            <circle class="progress-ring__circle-bg" r="18" cx="22" cy="22" />
+                            <circle class="progress-ring__circle" r="18" cx="22" cy="22"
+                                style="--percentage: <?php echo ($stat['value'] / $stat['max']); ?>; --stroke-color: hsl(<?php echo $stat['color']; ?>);" />
+                        </svg>
+                        <span class="progress-ring__value"><?php echo htmlspecialchars($stat['value']); ?></span>
+                    </div>
+                    <span class="activity-item__label"><?php echo htmlspecialchars($stat['label']); ?></span>
+                </div>
+                <?php endforeach; ?>
+            </div>
         </div>
     </aside>
 </div>
